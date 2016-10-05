@@ -4,7 +4,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "cd admin && composer update"
+            "cd backend && composer update"
         ]
     }
 }
