@@ -1,4 +1,4 @@
 
 <IfModule mod_rewrite.c>
-RedirectMatch 301 /admin/public/(.*) /admin/$1
+RedirectMatch 301 /admin/public/(.*) /api/$1
 </IfModule>
