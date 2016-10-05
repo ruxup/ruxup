@@ -75,7 +75,7 @@
 
 				<div class="links">
 					<a href="client/">Client</a>
-					<a href="admin/">Backend</a>
+					<a href="backend/public/">Backend</a>
 					<a href="https://github.com/ruxup/ruxup">Github</a>
 				</div>
 			</div>
