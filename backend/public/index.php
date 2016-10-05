@@ -18,7 +18,7 @@
 | loading any of our classes later on. It feels nice to relax.
 |
 */
-require '/../bootstrap/autoload.php';
+require '/../backend/bootstrap/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ require '/../bootstrap/autoload.php';
 |
 */
 
-$app = require_once '/../bootstrap/app.php';
+$app = require_once '/../backend/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
