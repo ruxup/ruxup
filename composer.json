@@ -3,6 +3,6 @@
         "ext-mbstring": "*"
     },
     "scripts": {
-        "composer install": "backend"
+        "composer update": "backend"
     }
 }
