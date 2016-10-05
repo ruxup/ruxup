@@ -3,6 +3,8 @@
         "ext-mbstring": "*"
     },
     "scripts": {
-        "composer update": "backend"
+        "post-install-cmd": [
+            "cd backend && composer update"
+        ]
     }
 }
