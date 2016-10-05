@@ -1,5 +1,4 @@
 
 <IfModule mod_rewrite.c>
-RewriteCond %{THE_REQUEST} ^GET\ /admin/public/
-RewriteRule ^admin/public/(.*) /admin/$1 [L,R=301]
+RedirectMatch 301 /admin/public/(.*) /admin/$1
 </IfModule>
