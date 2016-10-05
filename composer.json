@@ -1,4 +1,7 @@
 {
+    "require": {
+        "ext-mbstring": "*"
+    },
     "scripts": {
         "composer install": "backend"
     }
