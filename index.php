@@ -70,7 +70,7 @@
 
 			<div class="content">
 				<div class="title m-b-md">
-					Ruxup
+					ruXup
 				</div>
 
 				<div class="links">
