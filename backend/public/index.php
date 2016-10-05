@@ -18,7 +18,6 @@
 | loading any of our classes later on. It feels nice to relax.
 |
 */
-echo __DIR__.'/../bootstrap/autoload.php';
 require '/../bootstrap/autoload.php';
 
 /*
@@ -33,7 +32,7 @@ require '/../bootstrap/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once '/../bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
