@@ -74,9 +74,9 @@
 				</div>
 
 				<div class="links">
-					<a href="https://laravel.com/docs">Client</a>
-					<a href="https://laracasts.com">Backend</a>
-					<a href="https://laravel-news.com">Github</a>
+					<a href="client/">Client</a>
+					<a href="admin/public/">Backend</a>
+					<a href="https://github.com/ruxup/ruxup">Github</a>
 				</div>
 			</div>
 		</div>
