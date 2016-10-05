@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "composer install": "backend"
+    }
+}
