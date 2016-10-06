@@ -1,3 +1,5 @@
 # Rewrite --- https://ruxup.herokuapp.com/backend/public/ => https://ruxup.herokuapp.com/admin/
 
-RewriteRule ^backend/public/$ /admin/?&%{QUERY_STRING}
+RewriteEngine On
+RewriteRule ^api /backend/public/$
+# RewriteRule ^backend/public/$ /admin/?&%{QUERY_STRING}
