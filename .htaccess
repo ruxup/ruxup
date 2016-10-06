@@ -2,6 +2,3 @@
 
 RewriteEngine On
 RewriteRule ^api/ /backend/public/
-
-RewriteCond %{THE_REQUEST} /backend/public\.php [NC]
-RewriteRule ^ - [F]
