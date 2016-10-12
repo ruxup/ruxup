@@ -1,4 +1,4 @@
 # Rewrite --- https://ruxup.herokuapp.com/backend/public/ => https://ruxup.herokuapp.com/admin/
 
 RewriteEngine On
-RewriteRule ^api/ /backend/public/$1 [L]
+RewriteRule ^api/ backend/public/$1 [L]
