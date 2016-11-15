@@ -13,9 +13,9 @@ class CreateInterestUserTable extends Migration
      */
     public function up()
     {
-        Schema::table('interestuser', function (Blueprint $table) {
-            $table->integer('user_id');
-            $table->integer('interest_id');
+        Schema::create('interestuser', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->index();
+            $table->integer('interest_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('interest_id')->references('id')->on('interests')->onDelete('cascade')->onUpdate('cascade');
             $table->primary(array('user_id', 'interest_id'));

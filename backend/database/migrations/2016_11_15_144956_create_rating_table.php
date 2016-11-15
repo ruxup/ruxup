@@ -13,13 +13,13 @@ class CreateRatingTable extends Migration
      */
     public function up()
     {
-        Schema::table('rating', function (Blueprint $table) {
+        Schema::create('rating', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('rater_id');
+            $table->integer('rater_id')->unsigned()->index();
             $table->foreign('rater_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('ratee_id');
+            $table->integer('ratee_id')->unsigned()->index();
             $table->foreign('ratee_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('star', 1)->unsigned()->default(0);
+            $table->tinyInteger('star')->unsinged();
         });
     }
 
