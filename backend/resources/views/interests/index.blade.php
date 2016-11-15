@@ -8,6 +8,8 @@
             {!! $interest !!}
         @endforeach
         }
+    @else
+        <div>Not available</div>
     @endif
         <a href="{!! url(route('interests.index')) !!}">Stay on this page</a>
 </div>
