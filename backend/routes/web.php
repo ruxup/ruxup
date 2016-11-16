@@ -15,7 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('interests', 'InterestsController@index');
 Route::get('interests', ['as' => 'interests.index', 'uses' => 'InterestsController@index']);
 Auth::routes();
 
