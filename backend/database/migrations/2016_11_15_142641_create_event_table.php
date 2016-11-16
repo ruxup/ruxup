@@ -20,6 +20,7 @@ class CreateEventTable extends Migration
             $table->timestamp('end_time')->nullable();
             $table->text('description');
             $table->string('image');
+            $table->string('category');
             $table->integer('owner_id')->unsigned()->index();
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

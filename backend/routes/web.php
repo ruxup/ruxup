@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::get('interests', ['as' => 'interests.index', 'uses' => 'InterestsController@index']);
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
