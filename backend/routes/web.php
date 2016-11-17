@@ -19,3 +19,7 @@ Route::get('interests', ['as' => 'interests.index', 'uses' => 'InterestsControll
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

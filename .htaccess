@@ -2,3 +2,4 @@
 
 RewriteEngine On
 RewriteRule ^api backend/public/index.php
+AddType text/css .css 
