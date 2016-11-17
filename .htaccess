@@ -1,5 +1,3 @@
 # Rewrite --- https://ruxup.herokuapp.com/backend/public/ => https://ruxup.herokuapp.com/admin/
 
 RewriteEngine On
-RewriteRule ^api backend/public/index.php
-AddType text/css .css 
