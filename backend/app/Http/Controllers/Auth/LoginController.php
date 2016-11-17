@@ -89,4 +89,33 @@ class LoginController extends Controller
         // the token is valid and we have found the user via the sub claim
         return response()->json(compact('user'));
     }
+
+    public function logout()
+    {
+        try {
+
+            $token = JWTAuth::getToken();
+            if($token)
+            {
+                JWTAuth::setToken($token)->invalidate();
+                return response()->json(['user_logged_out'], 200);
+            }
+
+        } catch (TokenExpiredException $e) {
+
+            return response()->json(['token_expired'], $e->getStatusCode());
+
+        } catch (TokenInvalidException $e) {
+
+            return response()->json(['token_invalid'], $e->getStatusCode());
+
+        } catch (JWTException $e) {
+
+            return response()->json(['token_absent'], $e->getStatusCode());
+
+        }
+
+        // the token is valid and we have found the user via the sub claim
+        return response()->json(['token_not_found'], 404);
+    }
 }
