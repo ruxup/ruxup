@@ -19,5 +19,5 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post('login', 'Auth\LoginController@login');
-Route::get('login/profile', 'Auth\LoginController@getAuthenticatedUser');
+Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::get('logout', "Auth\LoginController@logout");
