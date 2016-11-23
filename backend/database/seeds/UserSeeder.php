@@ -17,14 +17,16 @@ class UserSeeder extends Seeder
         $faker = Faker::create();
         $users = [];
 
-        foreach(range(1,5) as $index)
+        foreach(range(1,4) as $index)
         {
             $users[] = [
                 'name' => $faker->name,
                 'email' => $faker->email,
-                'password' => $faker->password(6, 20),
+                'password' => bcrypt('123456'),
             ];
         }
+
+        array_push($users, ['name' => 'Radu', 'email' => 'radu.stoica1994@gmail.com', 'password' => bcrypt('123456')]);
 
         DB::table('users')->insert($users);
     }
