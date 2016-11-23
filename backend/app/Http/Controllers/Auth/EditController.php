@@ -18,27 +18,25 @@ class EditController extends Controller
             {
                 return response("token_not_set", 401);
             }
-
+            if (! $user = JWTAuth::setToken($_SERVER['HTTP_TOKEN'])->authenticate())
+            {
+                return response("user_not_found", 404);
+            }
         }
-        catch()
+        catch (JWTException $exc)
         {
-
+            // Wrong token
+            return response('could_not_create_token', 500);
         }
 
-         return response()->json(compact('token'));
+        return response()->json(compact('token'));
     }
 
-    // Run composer require intervention/image
-    public function postUpdateAvatar(Request $request)
-    {
-        // Handle user upload of avatar
-
-    }
-
-    // Upload to profile
+    // Upload to profile.
     public function postUpdateProfile(Request $request)
     {
         // Handle user upload of avatar
+
 
     }
 }

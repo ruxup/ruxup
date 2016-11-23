@@ -63,7 +63,7 @@ class LoginController extends Controller
         return response()->json(compact('token'));
     }
 
-    //get the user data
+    // Get the user data
     public function getAuthenticatedUser()
     {
         try {
