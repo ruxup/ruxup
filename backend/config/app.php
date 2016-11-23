@@ -180,6 +180,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        //Image intervention provider required by image upload functionality
+        Intervention\Image\ImageServiceProvider::class
+
     ],
 
     /*
@@ -230,6 +234,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        //Image alias array.
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];

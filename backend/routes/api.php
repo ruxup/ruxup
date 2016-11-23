@@ -21,3 +21,8 @@ Route::get('/user', function (Request $request) {
 Route::post('login', 'Auth\LoginController@login');
 Route::get('login/profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::get('logout', "Auth\LoginController@logout");
+
+//Edit user profile
+Route::get('user/profile', 'Auth\EditController@getProfile');
+Route::post('user/profile', 'Auth\EditController@postUpdateAvatar');
+Route::post('user/profile', 'Auth\EditController@postUpdateProfile');
