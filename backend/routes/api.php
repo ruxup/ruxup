@@ -18,6 +18,10 @@ Route::get('/user', function (Request $request) {
 })->middleware('jwt:auth');
 
 
+//User
 Route::post('login', 'Auth\LoginController@login');
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::get('logout', "Auth\LoginController@logout");
+
+//Event
+Route::post('create_event', 'EventController@create');
