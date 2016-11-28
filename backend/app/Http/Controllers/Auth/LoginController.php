@@ -51,13 +51,13 @@ class LoginController extends Controller
             //attempt to verify credentials and create token for user
             if(!$token = JWTAuth::attempt($credentials))
             {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return response('invalid_credentials', 401);
             }
         }
         catch (JWTException $exc)
         {
             //token wrong
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response('could_not_create_token', 500);
         }
 
         return response()->json(compact('token'));
@@ -67,23 +67,26 @@ class LoginController extends Controller
     public function getAuthenticatedUser()
     {
         try {
+            if(!isset($_SERVER['HTTP_TOKEN']))
+            {
+                return response("token_not_set", 401);
+            }
 
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
+            if (! $user = JWTAuth::setToken($_SERVER['HTTP_TOKEN'])->authenticate()) {
+                return response("user_not_found", 404);
             }
 
         } catch (TokenExpiredException $e) {
 
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response('token_expired', $e->getStatusCode());
 
         } catch (TokenInvalidException $e) {
 
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response('token_invalid', $e->getStatusCode());
 
         } catch (JWTException $e) {
 
-            return response()->json(['token_absent'], $e->getStatusCode());
-
+            return response('token_absent', $e->getStatusCode());
         }
 
         // the token is valid and we have found the user via the sub claim
@@ -94,28 +97,27 @@ class LoginController extends Controller
     {
         try {
 
-            $token = JWTAuth::getToken();
-            if($token)
+            if(isset($_SERVER['HTTP_TOKEN']))
             {
-                JWTAuth::setToken($token)->invalidate();
-                return response()->json(['user_logged_out'], 200);
+                JWTAuth::setToken($_SERVER['HTTP_TOKEN'])->invalidate();
+                return response("user_logged_out", 200);
             }
 
         } catch (TokenExpiredException $e) {
 
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response("token_expired", $e->getStatusCode());
 
         } catch (TokenInvalidException $e) {
 
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response('token_invalid', $e->getStatusCode());
 
         } catch (JWTException $e) {
 
-            return response()->json(['token_absent'], $e->getStatusCode());
+            return response('token_absent', $e->getStatusCode());
 
         }
 
         // the token is valid and we have found the user via the sub claim
-        return response()->json(['token_not_found'], 404);
+        return response('token_not_found', 404);
     }
 }
