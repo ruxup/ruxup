@@ -75,13 +75,18 @@ class RegisterController extends Controller
 
     public function postRegister(Request $request)
     {
-       // $credentials = $request->all();
+        // $credentials = $request->all();
 
-        $this->validate($request, array(
-            'name' => 'required|max:255|unique:users',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|max:255'
-    ));
+        try {
+            $this->validate($request, array(
+                'name' => 'required|max:255|unique:users',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|max:255'
+            ));
+        }catch (ValidationException $ex){
+        return response("invalid_credentials", $ex->getStatusCode());
+    }
+
 
         $user = $this->create($request);
         $user->save();
