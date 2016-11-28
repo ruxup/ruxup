@@ -87,8 +87,7 @@ class RegisterController extends Controller
         return response("invalid_credentials", $ex->getStatusCode());
     }
 
-
-        $user = $this->create($request);
+        $user = $this->create($request->all());
         $user->save();
 
         return response('registation_successful', 201);
