@@ -18,11 +18,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('jwt:auth');
 
 
+//User
 Route::post('login', 'Auth\LoginController@login');
 Route::get('login/profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::get('logout', 'Auth\LoginController@logout');
 
 //Edit user profile
-Route::get('/profile/{id}', 'Auth\EditController@getProfile');
-Route::put('/profile/{id}', 'Auth\EditController@putUpdateProfile');
+Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
+
+Route::post('create_event', 'EventController@create');
 
