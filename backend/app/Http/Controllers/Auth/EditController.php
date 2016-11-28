@@ -6,45 +6,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 use Image;
+use Validator;
+use Illuminate\Foundation\Auth\User;
 
 class EditController extends Controller
 {
-    protected function validator(array $data)
-    {
-        $messages = [
-            'email.unique' => 'The email has already been taken',
-        ];
-
-        return Validator::make($data, [
-            'name' => 'required|max:255|unique:events',
-            'email' => 'required|max:255',
-            'password' => 'required|max:255',
-            'nationality' => 'max:255',
-            'bio'=> 'max:5000',
-            'city' => 'max:255',
-            'profile_pic' => 'max:255',
-            'cover_pic' => 'max:255',
-            'phone' => 'max:255',
-            'update_at' => 'date_format:Y-m-d H:i:s'
-        ], $messages);
-    }
-
     // Upload to profile.
-    public function putUpdateProfile(Request $request)
+    public function putUpdateProfile(Request $request, $id)
     {
-        $userData = $request->only('name', 'email', 'password', 'nationality', 'bio', 'city', 'profile_pic', 'phone', 'update_at');
+        $userData = $request->only('name', 'email', 'password', 'nationality', 'bio', 'city', 'profile_pic', 'phone');
 
-        $validate = $this->validator($userData);
-        if($validate->fails())
-        {
-            return response($validate->errors()->all(), 417);
-        }
-        else
-        {
-            User::update($userData);
-            return response('Profile was successfully edited', 201);
-        }
+        $user = User::find($id);
 
+        $user->name = (string)$userData['name'];
+        $user->email = (string)$userData['email'];
+        $user->password = (string)$userData['password'];
+        $user->nationality = (string)$userData['nationality'];
+        $user->bio = $userData['bio'];
+        $user->city = (string)$userData['city'];
+        $user->profile_pic = (string)$userData['profile_pic'];
+        $user->phone = (string)$userData['phone'];
 
+        $user->save();
+
+        return response('Profile was successfully edited', 200);
     }
 }
