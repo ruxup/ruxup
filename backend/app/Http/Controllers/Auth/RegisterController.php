@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use League\Flysystem\Exception;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -42,7 +46,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -57,7 +61,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     protected function create(array $data)
@@ -67,5 +71,38 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function postRegister(Request $request)
+    {
+        $credentials = $request->all();
+
+        $this->validate($request, array(
+            'name' => 'required|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|max:255'
+    ));
+
+        $user = new User;
+        $user->name = $credentials->name;
+        $user->email = $credentials->email;
+        $user->password = $credentials->password;
+        $user->save();
+
+        return response('registation_successful', 201);
+//        $validation = validator($credentials);
+//
+//        if ($validation->fails()) {
+//            return response("bad_registration", 409);
+//        } else {
+//            try {
+//                $this->create($credentials);
+//                return response("registration_successful", 201);
+//            } catch (Exception $ex) {
+//                return response("user_exists", $ex->getStatusCode());
+//            }
+//
+//        }
+
     }
 }
