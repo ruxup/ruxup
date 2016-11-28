@@ -24,5 +24,5 @@ Route::get('logout', 'Auth\LoginController@logout');
 
 //Edit user profile
 Route::get('/profile/{id}', 'Auth\EditController@getProfile');
-Route::put('/profile/{id}', 'Auth\EditController@postUpdateProfile');
+Route::put('/profile/{id}', 'Auth\EditController@putUpdateProfile');
 
