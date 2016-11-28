@@ -75,7 +75,7 @@ class RegisterController extends Controller
 
     public function postRegister(Request $request)
     {
-        $credentials = $request->all();
+       // $credentials = $request->all();
 
         $this->validate($request, array(
             'name' => 'required|max:255|unique:users',
@@ -83,10 +83,7 @@ class RegisterController extends Controller
             'password' => 'required|max:255'
     ));
 
-        $user = new User;
-        $user->name = $credentials->name;
-        $user->email = $credentials->email;
-        $user->password = $credentials->password;
+        $user = $this->create($request);
         $user->save();
 
         return response('registation_successful', 201);
