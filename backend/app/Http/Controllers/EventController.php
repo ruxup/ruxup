@@ -38,7 +38,7 @@ class EventController extends Controller
         else
         {
             Event::create($eventData);
-            return response('Event created succesfully', 201);
+            return response('Event created successfully', 201);
         }
     }
 }

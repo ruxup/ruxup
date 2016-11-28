@@ -20,6 +20,15 @@ Route::get('/user', function (Request $request) {
 
 //User
 Route::post('login', 'Auth\LoginController@login');
+
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
-Route::get('logout', "Auth\LoginController@logout");
 Route::post('register','Auth\RegisterController@postRegister');
+
+Route::get('login/profile', 'Auth\LoginController@getAuthenticatedUser');
+Route::get('logout', 'Auth\LoginController@logout');
+
+//Edit user profile
+Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
+
+Route::post('create_event', 'EventController@create');
+
