@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use League\Flysystem\Exception;
 use Validator;
+use Illuminate\Foundation\Validation;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -42,7 +47,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -57,7 +62,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     protected function create(array $data)
@@ -67,5 +72,26 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function postRegister(Request $request)
+    {
+        try {
+            $validate = $this->validator($request->all(), array(
+                'name' => 'required|max:255|unique:users',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|max:255'
+            ));
+            if ($validate->fails()) {
+                return response("user_exists", 417);
+            }
+        } catch (ValidationException $ex) {
+            return response("validation_exception", $ex->getStatusCode());
+        }
+
+        $user = $this->create($request->all());
+        $user->save();
+
+        return response('registation_successful', 201);
     }
 }
