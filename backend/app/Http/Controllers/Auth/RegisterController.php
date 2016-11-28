@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
 use Validator;
+use Illuminate\Foundation\Validation;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -75,35 +76,22 @@ class RegisterController extends Controller
 
     public function postRegister(Request $request)
     {
-        // $credentials = $request->all();
-
         try {
-            $this->validate($request, array(
+            $validate = $this->validator($request->all(), array(
                 'name' => 'required|max:255|unique:users',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|max:255'
             ));
-        }catch (ValidationException $ex){
-        return response("invalid_credentials", $ex->getStatusCode());
-    }
+            if ($validate->fails()) {
+                return response("user_exists", 417);
+            }
+        } catch (ValidationException $ex) {
+            return response("validation_exception", $ex->getStatusCode());
+        }
 
         $user = $this->create($request->all());
         $user->save();
 
         return response('registation_successful', 201);
-//        $validation = validator($credentials);
-//
-//        if ($validation->fails()) {
-//            return response("bad_registration", 409);
-//        } else {
-//            try {
-//                $this->create($credentials);
-//                return response("registration_successful", 201);
-//            } catch (Exception $ex) {
-//                return response("user_exists", $ex->getStatusCode());
-//            }
-//
-//        }
-
     }
 }
