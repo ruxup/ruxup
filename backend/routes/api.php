@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-header('Access-Control-Allow-Origin: https://ruxup-client.herokuapp.com');
+header('Access-Control-Allow-Origin: *');
 
 Route::get('/user', function (Request $request) {
     return $request->user();
