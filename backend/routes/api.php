@@ -23,8 +23,6 @@ Route::post('login', 'Auth\LoginController@login');
 
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::post('register','Auth\RegisterController@postRegister');
-
-Route::get('login/profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::get('logout', 'Auth\LoginController@logout');
 
 //Edit user profile
