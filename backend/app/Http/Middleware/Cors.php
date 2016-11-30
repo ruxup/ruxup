@@ -10,9 +10,9 @@ class Cors
     public function handle($request, Closure $next)
     {
 
-        return $next($request)
-            ->header('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN'])
-            ->header('Access-Control-Allow-Headers', 'accept, content-type,x-xsrf-token, x-csrf-token')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//        return $next($request)
+//            ->header('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN'])
+//            ->header('Access-Control-Allow-Headers', 'accept, content-type,x-xsrf-token, x-csrf-token')
+//            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 }

@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+header('Access-Control-Allow-Origin:'. $_SERVER['HTTP_ORIGIN']);
+header('Access-Control-Allow-Headers:' . 'accept, content-type,x-xsrf-token, x-csrf-token');
+header('Access-Control-Allow-Methods:' . 'GET, POST, PUT, DELETE, OPTIONS');
+
 Route::group(['middleware' => 'cors'], function () {
 
     Route::get('/user', function (Request $request) {
