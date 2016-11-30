@@ -13,29 +13,23 @@ use Illuminate\Http\Request;
 |
 */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers:' . 'accept, content-type,x-xsrf-token, x-csrf-token');
-header('Access-Control-Allow-Methods:' . 'GET, POST, PUT, DELETE, OPTIONS');
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('jwt:auth');
 
-Route::group(['middleware' => 'cors'], function () {
+//User
+Route::post('login', 'Auth\LoginController@login');
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->middleware('jwt:auth');
+Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
+Route::post('register', 'Auth\RegisterController@postRegister');
+Route::get('logout', 'Auth\LoginController@logout');
 
-    //User
-    Route::post('login', 'Auth\LoginController@login');
+//Edit user profile
+Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
 
-    Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
-    Route::post('register', 'Auth\RegisterController@postRegister');
-    Route::get('logout', 'Auth\LoginController@logout');
+//Create event
+Route::post('create_event', 'EventController@create');
 
-    //Edit user profile
-    Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
-
-    //Create event
-    Route::post('create_event', 'EventController@create');
-});
 
 
 
