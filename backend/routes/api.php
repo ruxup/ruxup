@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-header('Access-Control-Allow-Origin: *');
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('jwt:auth');
 
 Route::group(['middleware' => 'cors'], function () {
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    })->middleware('jwt:auth');
+
     //User
     Route::post('login', 'Auth\LoginController@login');
 
