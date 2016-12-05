@@ -30,6 +30,8 @@ Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
 //Create event
 Route::post('create_event', 'EventController@create');
 
+Route::delete('leave_event', 'EventController@deleteLeaveEvent');
+
 
 
 

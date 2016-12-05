@@ -41,4 +41,9 @@ class EventController extends Controller
             return response('Event created successfully', 201);
         }
     }
+
+    public function deleteLeaveEvent($eventId)
+    {
+        EventUser::delete($eventId);
+    }
 }
