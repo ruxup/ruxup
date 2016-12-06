@@ -23,12 +23,15 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::post('register', 'Auth\RegisterController@postRegister');
 Route::get('logout', 'Auth\LoginController@logout');
+Route::get('getEvents/{id}', 'UserController@getEvents');
+Route::get('getEventsOwner/{id}', 'UserController@getEventsWhereOwner');
 
 //Edit user profile
 Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
 
-//Create event
+//Event
 Route::post('create_event', 'EventController@create');
+Route::get('getUsers/{id}', 'EventController@getUsers');
 
 Route::delete('leave_event', 'EventController@deleteLeaveEvent');
 
