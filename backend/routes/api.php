@@ -25,6 +25,7 @@ Route::post('register', 'Auth\RegisterController@postRegister');
 Route::get('logout', 'Auth\LoginController@logout');
 Route::get('getEvents/{id}', 'UserController@getEvents');
 Route::get('getEventsOwner/{id}', 'UserController@getEventsWhereOwner');
+Route::get('joinEvent/{userid}/{eventid}', 'UserController@joinEvent');
 
 //Edit user profile
 Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');

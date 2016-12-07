@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class UserController extends Controller
 {
@@ -28,6 +31,26 @@ class UserController extends Controller
             return response("User_Not_Found", 404);
         }
         return response(DB::table('events')->where('owner_id', $id)->get(), 200);
+
+    }
+
+    public function joinEvent($userId, $eventId)
+    {
+        try {
+            $user = User::findOrFail($userId);
+            $event = Event::findOrFail($eventId);
+
+            $event->users()->attach($user, array('joined_at' => new DateTime(), 'active' => 1));
+            return response('User '. $user->name . ' has joined event ' . $event->name, 200);
+        }
+        catch (ModelNotFoundException $exception)
+        {
+            return response($exception->getModel() . ' not found', 404);
+        }
+        catch (QueryException $queryException)
+        {
+            return response('User already is a member of this event', 409);
+        }
 
     }
 }
