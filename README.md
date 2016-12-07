@@ -16,4 +16,6 @@ get events that user with 'id' created (GET) https://ruxup.herokuapp.com/backend
 
 get all users that belongs to the event with 'id' (GET) https://ruxup.herokuapp.com/backend/public/index.php/api/getUsers/{id} (id of event)
 
+join an event (GET) https://ruxup.herokuapp.com/backend/public/index.php/api/joinEvent/{userid}/{eventid} 
+
 
