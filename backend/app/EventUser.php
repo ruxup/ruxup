@@ -10,4 +10,5 @@ class EventUser extends Model
 {
     //Not plural
     protected $table='eventuser';
+    protected $primaryKey = array('user_id', 'event_id');
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use App\EventUser;
 use App\Event;
 use App\User;
 use DateTime;
@@ -45,11 +47,26 @@ class EventController extends Controller
         }
     }
 
-<<<<<<< HEAD
-    public function deleteLeaveEvent($eventId)
+    public function deleteLeaveEvent($userId,$eventId)
     {
-        EventUser::delete($eventId);
-=======
+        try {
+            $eventUser=DB::table('eventuser')->where('user_id', '=', $userId)
+                ->where('event_id', '=', $eventId)
+                ->first();
+
+            $eventUser->delete();
+
+            return response('Event deleted successfully', 201);
+
+        } catch (ModelNotFoundException $exception) {
+            return response('Event_not_found', 404);
+        } catch(FatalErrorException $exception) {
+            return response('Event_not_found', 404);
+        } catch (QueryException $exception){
+        return response('Event_not_found', 404);
+        }
+    }
+
     public function getUsers($id)
     {
         try {
@@ -59,6 +76,6 @@ class EventController extends Controller
             return response('Event_not_found', 404);
         }
 
->>>>>>> master
+
     }
 }
