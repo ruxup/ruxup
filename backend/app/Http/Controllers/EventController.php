@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\EventUser;
 use App\Event;
 use App\User;
 use DateTime;
