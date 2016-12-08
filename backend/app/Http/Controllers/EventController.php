@@ -50,11 +50,9 @@ class EventController extends Controller
     public function deleteLeaveEvent($userId,$eventId)
     {
         try {
-            $eventUser=DB::table('eventuser')->where('user_id', '=', $userId)
+             DB::table('eventuser')->where('user_id', '=', $userId)
                 ->where('event_id', '=', $eventId)
-                ->first();
-
-            $eventUser->delete();
+                ->delete();
 
             return response('Event deleted successfully', 201);
 
