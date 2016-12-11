@@ -53,4 +53,17 @@ class UserController extends Controller
         }
 
     }
+
+    public function findEvent($location, $starttime, $category)
+    {
+        try {
+           // $eventData = $request->only('location','start_time','category');
+
+            $locationEvents=DB::table('events')->where('location',$location)->where('start_time',$starttime)->where('category',$category)->get();
+
+            return response(json_encode($locationEvents), 200);
+        } catch (ModelNotFoundException $exception) {
+            return response("User_Not_Found", 404);
+        }
+    }
 }

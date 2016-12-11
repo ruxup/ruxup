@@ -36,6 +36,8 @@ Route::get('getUsers/{id}', 'EventController@getUsers');
 
 Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
 
+Route::get('findEvent/{location}/{start_time}/{category}','UserController@findEvent');
+
 
 
 
