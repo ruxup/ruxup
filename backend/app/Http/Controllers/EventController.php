@@ -48,7 +48,7 @@ class EventController extends Controller
         }
     }
 
-    public function deleteLeaveEvent($userId,$eventId)
+    public function leaveEvent($userId,$eventId)
     {
         try {
              DB::table('eventuser')->where('user_id', '=', $userId)
