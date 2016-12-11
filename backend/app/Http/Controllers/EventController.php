@@ -74,7 +74,43 @@ class EventController extends Controller
         } catch (ModelNotFoundException $exception) {
             return response('Event_not_found', 404);
         }
+    }
 
+    public function postUpdateEvent(Request $request){
+        $id  = $request->only('id');
 
+        $event = Event::whereId($id)->first();
+
+        try {
+            $name = $request->get('name');
+            if ($name != ''){
+                $event->name = $name;
+            }
+            $location= $request->get('location');
+            if ($location != ''){
+                $event->location = $location;
+            }
+            $start_time = $request->get('start_time');
+            if ($start_time != ''){
+                $event->start_time = $start_time;
+            }
+            $end_time = $request->get('end_time');
+            if ($end_time != ''){
+                $event->end_time = $end_time;
+            }
+            $description = $request->get('description');
+            if($description != ''){
+                $event->description = $description;
+            }
+            $category = $request->get('category');
+            if($category != ''){
+                $event->category = $category;
+            }
+
+            $event->save();
+        } catch (QueryException $e){
+            return response($e->getMessage(), 400);
+        }
+        return response("update_event_success",200);
     }
 }

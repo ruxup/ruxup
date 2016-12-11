@@ -39,6 +39,8 @@ class EditController extends Controller
 
 
 
+
+
     //Create post
 /*
 $image = $request->file('image');
