@@ -31,4 +31,10 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    public function events()
+    {
+        return $this->belongsToMany('App\Event', 'eventuser')
+            ->withPivot('joined_at', 'active');
+    }
+
 }

@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use App\Event;
+use App\User;
+use DateTime;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Validator;
 
 class EventController extends Controller
@@ -31,14 +37,44 @@ class EventController extends Controller
         $eventData = $request->only('name', 'location', 'start_time', 'end_time', 'category', 'description', 'image', 'owner_id');
 
         $validate = $this->validator($eventData);
-        if($validate->fails())
-        {
+        if ($validate->fails()) {
             return response($validate->errors()->all(), 417);
-        }
-        else
-        {
-            Event::create($eventData);
+        } else {
+            $event = Event::create($eventData);
+            $owner = User::find($event->owner_id);
+            //Update the pivot table as well
+            $event->users()->attach($owner, array('joined_at' => new DateTime(), 'active' => 1));
             return response('Event created successfully', 201);
         }
+    }
+
+    public function leaveEvent($userId,$eventId)
+    {
+        try {
+             DB::table('eventuser')->where('user_id', '=', $userId)
+                ->where('event_id', '=', $eventId)
+                ->delete();
+
+            return response('Event deleted successfully', 201);
+
+        } catch (ModelNotFoundException $exception) {
+            return response('Event_not_found', 404);
+        } catch(FatalErrorException $exception) {
+            return response('Event_not_found', 404);
+        } catch (QueryException $exception){
+        return response('Event_not_found', 404);
+        }
+    }
+
+    public function getUsers($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            return response(json_encode($event->users), 200);
+        } catch (ModelNotFoundException $exception) {
+            return response('Event_not_found', 404);
+        }
+
+
     }
 }
