@@ -83,7 +83,7 @@ class RegisterController extends Controller
                 'password' => 'required|max:255'
             ));
             if ($validate->fails()) {
-                return response("user_exists", 417);
+                return response($validate->failed(), 417);
             }
         } catch (ValidationException $ex) {
             return response("validation_exception", $ex->getStatusCode());
