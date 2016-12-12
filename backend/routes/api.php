@@ -39,7 +39,7 @@ Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
 
 Route::get('findEvent/{location}/{start_time}/{category}','UserController@findEvent');
 
-
+Route::post('rate', 'UserController@rate');
 
 
 
