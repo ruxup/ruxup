@@ -80,18 +80,21 @@ class RegisterController extends Controller
             $validate = $this->validator($request->all(), array(
                 'name' => 'required|max:255|unique:users',
                 'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|max:255'
+                'password' => 'required|max:255',
+                'password_confirmation'=>'required|max:255|confirmed'
             ));
-            if ($validate->fails()) {
-                return response($validate->failed(), 417);
+            if ($validate->passes()) {
+
+                $user = $this->create($request->all());
+                $user->profile_pic = 'https://api.adorable.io/avatars/285/default';
+                $user->save();
+
+                return response('registation_successful', 201);
+            } else{
+                return response($validate->messages(), 417);
             }
-        } catch (ValidationException $ex) {
-            return response("validation_exception", $ex->getStatusCode());
+        } catch (ValidationException $e) {
+            return response("validation_exception", $e->getStatusCode());
         }
-
-        $user = $this->create($request->all());
-        $user->save();
-
-        return response('registation_successful', 201);
     }
 }
