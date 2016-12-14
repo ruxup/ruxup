@@ -9,4 +9,6 @@ class Message extends Model
     protected $fillable = [
         'description', 'time_sent', 'owner_id', 'event_id'
     ];
+
+    public $timestamps = false;
 }
