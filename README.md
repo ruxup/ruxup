@@ -18,4 +18,6 @@ get all users that belongs to the event with 'id' (GET) https://ruxup.herokuapp.
 
 join an event (GET) https://ruxup.herokuapp.com/backend/public/index.php/api/joinEvent/{userid}/{eventid} 
 
+comment inside an event (POST) https://ruxup.herokuapp.com/backend/public/index.php/api/comment (inside body define: description, time_sent, owner_id, event_id) 
+
 
