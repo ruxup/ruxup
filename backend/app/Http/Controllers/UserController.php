@@ -73,21 +73,11 @@ class UserController extends Controller
     public function rate(Request $request)
     {
         try {
-
-//            $rating = new Rating();
-//
-//            $rater_id=$request->get('rater_id');
-//            $ratee_id=$request->get('ratee_id');
-//            $star=$request->get('star');
-//
-//            $rating->rater_id = $rater_id;
-//            $rating->ratee_id = $ratee_id;
-//            $rating->star = $star;
             $rating = $request->all();
-            $rating->save();
+            Rating::create(rating);
 
-            //return response('User '. $raterId->name . ' rated ' . $rateeId->name . ' with '. $star . ' stars.', 200);
-            return response('Success!', 200);
+            return response('User '. $rating->rater_id . ' rated ' . $rating->ratee_id . ' with '. $rating->star . ' stars.', 200);
+            //return response('Success!', 200);
         }
         catch (ModelNotFoundException $exception)
         {
@@ -97,12 +87,5 @@ class UserController extends Controller
         {
             return response('Query error', 409);
         }
-        /*$rate = $request->only('rater_id', 'ratee_id', 'star');
-
-        $rating = new Rating();
-
-        $event->users()->attach($owner, array('joined_at' => new DateTime(), 'active' => 1));
-        return response('Event created successfully', 201);*/
-
     }
 }
