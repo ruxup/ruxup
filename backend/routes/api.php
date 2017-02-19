@@ -34,6 +34,7 @@ Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
 Route::post('create_event', 'EventController@create');
 Route::get('getUsers/{id}', 'EventController@getUsers');
 Route::post('updateEvent', 'EventController@postUpdateEvent');
+Route::post('getAllEvents', 'EventController@getAllEvents');
 
 Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
 

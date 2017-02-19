@@ -9,6 +9,7 @@ use App\User;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Validator;
 
@@ -112,5 +113,33 @@ class EventController extends Controller
             return response($e->getMessage(), 400);
         }
         return response("update_event_success",200);
+    }
+
+    public function getAllEvents(Request $request)
+    {
+        try {
+            $column = $request->get('column');
+            $orderType = $request->get('orderType');
+            if($orderType != 'DESC' && $orderType != 'ASC')
+            {
+                return response('wrong orderType parameter', 406);
+            }
+
+            if(Schema::hasColumn('events', $column)) {
+                $events = Event::orderBy($column, $orderType)->get();
+                if ($events->count() != 0) {
+                    return response($events, 200);
+                }
+                return response('There are no events', 404);
+            }
+            else
+            {
+                return response('The column specified does not exist within events table', 406);
+            }
+        }
+        catch (QueryException $e)
+        {
+            return response($e->getMessage(), 400);
+        }
     }
 }
