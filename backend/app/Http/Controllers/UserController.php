@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\Rating;
 use App\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Ramsey\Uuid\Generator\RandomBytesGenerator;
 
 class UserController extends Controller
 {
@@ -64,6 +67,25 @@ class UserController extends Controller
             return response(json_encode($locationEvents), 200);
         } catch (ModelNotFoundException $exception) {
             return response("User_Not_Found", 404);
+        }
+    }
+
+    public function rate(Request $request)
+    {
+        try {
+            $rating = $request->all();
+            Rating::create(rating);
+
+            return response('User '. $rating->rater_id . ' rated ' . $rating->ratee_id . ' with '. $rating->star . ' stars.', 200);
+            //return response('Success!', 200);
+        }
+        catch (ModelNotFoundException $exception)
+        {
+            return response($exception->getModel() . ' not found', 404);
+        }
+        catch (QueryException $queryException)
+        {
+            return response('Query error', 409);
         }
     }
 }
