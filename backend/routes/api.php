@@ -19,27 +19,21 @@ Route::get('/user', function (Request $request) {
 
 //User
 Route::post('login', 'Auth\LoginController@login');
-
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
 Route::post('register', 'Auth\RegisterController@postRegister');
 Route::get('logout', 'Auth\LoginController@logout');
 Route::get('getEvents/{id}', 'UserController@getEvents');
 Route::get('getEventsOwner/{id}', 'UserController@getEventsWhereOwner');
 Route::get('joinEvent/{userid}/{eventid}', 'UserController@joinEvent');
-
-//Edit user profile
 Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
 
 //Event
 Route::post('create_event', 'EventController@create');
 Route::get('getUsers/{id}', 'EventController@getUsers');
-Route::post('updateEvent', 'EventController@postUpdateEvent');
-Route::post('getAllEvents', 'EventController@getAllEvents');
-
+Route::post('updateEvent', 'EventController@updateEvent');
+Route::get('getAllEvents/{column}/{orderType}', 'EventController@getAllEvents');
 Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
-
 Route::get('findEvent/{location}/{start_time}/{category}','UserController@findEvent');
-
 Route::post('rate', 'UserController@rate');
 
 //Message

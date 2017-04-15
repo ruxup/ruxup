@@ -42,28 +42,36 @@ class EventController extends Controller
             return response($validate->errors()->all(), 417);
         } else {
             $event = Event::create($eventData);
-            $owner = User::find($event->owner_id);
-            //Update the pivot table as well
-            $event->users()->attach($owner, array('joined_at' => new DateTime(), 'active' => 1));
+            $ownerId = $event->owner_id;
+            $owner = User::find($ownerId);
+            if (is_null($owner)) {
+                return response('User with id: ' . $ownerId . ' not found.', 404);
+            }
+            $this->updatePivotUserEvent($event, $owner);
             return response('Event created successfully', 201);
         }
     }
 
-    public function leaveEvent($userId,$eventId)
+    public function leaveEvent($userId, $eventId)
     {
         try {
-             DB::table('eventuser')->where('user_id', '=', $userId)
-                ->where('event_id', '=', $eventId)
-                ->delete();
+            $elementToRemove = $this->checkIfUserIsMemberOfEvent($userId, $eventId);
+            if (!is_null($elementToRemove)) {
+                $this->removeUserFromEvent($userId, $eventId);
+            }
+            else
+            {
+                return response('User with id ' . $userId . ' is not member of event with id ' . $eventId);
+            }
 
-            return response('Event deleted successfully', 201);
+            return response('User with id ' . $userId . ' left event with id ' . $eventId, 201);
 
         } catch (ModelNotFoundException $exception) {
             return response('Event_not_found', 404);
-        } catch(FatalErrorException $exception) {
+        } catch (FatalErrorException $exception) {
             return response('Event_not_found', 404);
-        } catch (QueryException $exception){
-        return response('Event_not_found', 404);
+        } catch (QueryException $exception) {
+            return response('Event_not_found', 404);
         }
     }
 
@@ -77,69 +85,81 @@ class EventController extends Controller
         }
     }
 
-    public function postUpdateEvent(Request $request){
-        $id  = $request->only('id');
+    public function updateEvent(Request $request)
+    {
+        $id = $request->only('id');
 
         $event = Event::whereId($id)->first();
 
         try {
             $name = $request->get('name');
-            if ($name != ''){
+            if ($name != '') {
                 $event->name = $name;
             }
-            $location= $request->get('location');
-            if ($location != ''){
+            $location = $request->get('location');
+            if ($location != '') {
                 $event->location = $location;
             }
             $start_time = $request->get('start_time');
-            if ($start_time != ''){
+            if ($start_time != '') {
                 $event->start_time = $start_time;
             }
             $end_time = $request->get('end_time');
-            if ($end_time != ''){
+            if ($end_time != '') {
                 $event->end_time = $end_time;
             }
             $description = $request->get('description');
-            if($description != ''){
+            if ($description != '') {
                 $event->description = $description;
             }
             $category = $request->get('category');
-            if($category != ''){
+            if ($category != '') {
                 $event->category = $category;
             }
 
             $event->save();
-        } catch (QueryException $e){
+        } catch (QueryException $e) {
             return response($e->getMessage(), 400);
         }
-        return response("update_event_success",200);
+        return response("update_event_success", 200);
     }
 
-    public function getAllEvents(Request $request)
+    public function getAllEvents($column, $orderType)
     {
         try {
-            $column = $request->get('column');
-            $orderType = $request->get('orderType');
-            if($orderType != 'DESC' && $orderType != 'ASC')
-            {
+            if ($orderType != 'DESC' && $orderType != 'ASC') {
                 return response('wrong orderType parameter', 406);
             }
 
-            if(Schema::hasColumn('events', $column)) {
+            if (Schema::hasColumn('events', $column)) {
                 $events = Event::orderBy($column, $orderType)->get();
                 if ($events->count() != 0) {
                     return response($events, 200);
                 }
                 return response('There are no events', 404);
-            }
-            else
-            {
+            } else {
                 return response('The column specified does not exist within events table', 406);
             }
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response($e->getMessage(), 400);
         }
     }
+
+    private function updatePivotUserEvent(Event $event, User $owner)
+    {
+        $event->users()->attach($owner, array('joined_at' => new DateTime(), 'active' => 1));
+    }
+
+    private function checkIfUserIsMemberOfEvent($userId, $eventId)
+    {
+        return DB::table(config('constants.eventuser_table'))->where('user_id', '=', $userId)
+            ->where('event_id', '=', $eventId)->first();
+    }
+
+    private function removeUserFromEvent($userId, $eventId)
+    {
+        DB::table(config('constants.eventuser_table'))->where('user_id', '=', $userId)
+            ->where('event_id', '=', $eventId)->delete();
+    }
+
 }
