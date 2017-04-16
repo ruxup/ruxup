@@ -61,10 +61,10 @@ class EventController extends Controller
             }
             else
             {
-                return response('User with id ' . $userId . ' is not member of event with id ' . $eventId);
+                return response('User with id ' . $userId . ' is not member of event with id ' . $eventId, 404);
             }
 
-            return response('User with id ' . $userId . ' left event with id ' . $eventId, 201);
+            return response('User with id ' . $userId . ' left event with id ' . $eventId, 200);
 
         } catch (ModelNotFoundException $exception) {
             return response('Event_not_found', 404);
@@ -85,6 +85,7 @@ class EventController extends Controller
         }
     }
 
+    //Need to handle image as well.
     public function updateEvent(Request $request)
     {
         $id = $request->only('id');
@@ -93,35 +94,23 @@ class EventController extends Controller
 
         try {
             $name = $request->get('name');
-            if ($name != '') {
-                $event->name = $name;
-            }
             $location = $request->get('location');
-            if ($location != '') {
-                $event->location = $location;
-            }
             $start_time = $request->get('start_time');
-            if ($start_time != '') {
-                $event->start_time = $start_time;
-            }
             $end_time = $request->get('end_time');
-            if ($end_time != '') {
-                $event->end_time = $end_time;
-            }
             $description = $request->get('description');
-            if ($description != '') {
-                $event->description = $description;
-            }
             $category = $request->get('category');
-            if ($category != '') {
-                $event->category = $category;
-            }
 
+            $this->updateColumn($event, 'name', $name);
+            $this->updateColumn($event, 'location', $location);
+            $this->updateColumn($event, 'start_time', $start_time);
+            $this->updateColumn($event, 'end_time', $end_time);
+            $this->updateColumn($event, 'description', $description);
+            $this->updateColumn($event, 'category', $category);
             $event->save();
         } catch (QueryException $e) {
             return response($e->getMessage(), 400);
         }
-        return response("update_event_success", 200);
+        return response("Event updated successfully", 200);
     }
 
     public function getAllEvents($column, $orderType)
@@ -160,6 +149,14 @@ class EventController extends Controller
     {
         DB::table(config('constants.eventuser_table'))->where('user_id', '=', $userId)
             ->where('event_id', '=', $eventId)->delete();
+    }
+
+    private function updateColumn(Event $event, $column, $value)
+    {
+        if(!is_null($column))
+        {
+            $event->$column = $value;
+        }
     }
 
 }

@@ -40,22 +40,34 @@ class EventTest extends TestCase
 
     public function test_get_users()
     {
-        $response = $this->json('GET', "api/getUsers/24")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/getUsers/24")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_update_event()
     {
-        $this->markTestSkipped('test_update_event skipped');
+        $data = [
+            'id' => '24',
+            'name' => 'testCaseUpdate',
+            'location' => 'testCaseUpdate',
+            'start_time' => Carbon::parse('2010-12-31 00:00:00')->format('Y-m-d H:i:s'),
+            'end_time' => Carbon::parse('2010-12-31 00:00:00')->format('Y-m-d H:i:s'),
+            'category' => 'testCaseUpdate',
+            'description' => 'testCaseUpdate',
+            'owner_id' => '4'
+        ];
+        $response = $this->call('POST', "api/updateEvent", $data);
+        $this->assertEquals('200 Event updated successfully', $response->status() . ' ' . $response->getContent());
     }
 
     public function test_get_all_events()
     {
-        $this->markTestSkipped('test_get_all_events skipped');
+        $this->json('GET', "api/getAllEvents/id/ASC")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_leave_event()
     {
-        $this->markTestSkipped('test_leave_event skipped');
+        $response = $this->call('DELETE', "api/leaveEvent/44/24");
+        $this->assertEquals('200 User with id 44 left event with id 24', $response->status() . ' ' . $response->getContent());
     }
 
 }
