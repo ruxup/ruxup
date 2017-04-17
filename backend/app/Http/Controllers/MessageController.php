@@ -26,7 +26,7 @@ class MessageController extends Controller
         $owner = $messageData['owner_id'];
         $event = $messageData['event_id'];
 
-        $eventuser = DB::table('eventuser')->where('user_id',$owner)->where('event_id',$event)->get();
+        $eventuser = DB::table(config('constants.eventuser_table'))->where('user_id',$owner)->where('event_id',$event)->get();
 
         if(count($eventuser) != 0) {
 
@@ -35,12 +35,12 @@ class MessageController extends Controller
                 return response($validate->errors(), 417);
             } else {
                 Message::create($messageData);
-                return response(['message accepted' => 'all parameters were accepted'], 200);
+                return response(json_encode('Comment added from user with id ' . $owner . ' to event with id ' . $event), 200);
             }
         }
         else
         {
-            return response(['message not accepted' => 'The pair {User, Event} is not found in the DB.'], 404);
+            return response('Comment could not be added. User not member of the event.', 404);
         }
 
     }

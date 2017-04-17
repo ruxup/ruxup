@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class Event extends Model
 {
@@ -16,5 +17,9 @@ class Event extends Model
     {
         return $this->belongsToMany('App\User', 'eventuser')
             ->withPivot('joined_at', 'active');
+    }
+
+    public static function getTableColumns() {
+        return Schema::getColumnListing(config('constants.events_table'));
     }
 }

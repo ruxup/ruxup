@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->truncate();
+        DB::table(config('constants.users_table'))->truncate();
 
         $faker = Faker::create();
         $users = [];
@@ -28,6 +28,6 @@ class UserSeeder extends Seeder
 
         array_push($users, ['name' => 'Radu', 'email' => 'radu.stoica1994@gmail.com', 'password' => bcrypt('123456')]);
 
-        DB::table('users')->insert($users);
+        DB::table(config('constants.users_table'))->insert($users);
     }
 }

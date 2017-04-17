@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Event;
 use App\Rating;
 use App\User;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use DateTime;
-use Ramsey\Uuid\Generator\RandomBytesGenerator;
 
 class UserController extends Controller
 {
@@ -28,12 +27,14 @@ class UserController extends Controller
     {
         try {
             User::findOrFail($id);
-        }
-        catch (ModelNotFoundException $e)
-        {
+        } catch (ModelNotFoundException $e) {
             return response("User_Not_Found", 404);
         }
-        return response(DB::table('events')->where('owner_id', $id)->get(), 200);
+        $arrayEvents = DB::table(config('constants.events_table'))->where('owner_id', $id)->get();
+        if (count($arrayEvents) == 0) {
+            return response("User is not an owner", 404);
+        }
+        return response(json_encode($arrayEvents), 200);
 
     }
 
@@ -44,29 +45,44 @@ class UserController extends Controller
             $event = Event::findOrFail($eventId);
 
             $event->users()->attach($user, array('joined_at' => new DateTime(), 'active' => 1));
-            return response('User '. $user->name . ' has joined event ' . $event->name, 200);
-        }
-        catch (ModelNotFoundException $exception)
-        {
+            return response('User ' . $user->name . ' has joined event ' . $event->name, 200);
+        } catch (ModelNotFoundException $exception) {
             return response($exception->getModel() . ' not found', 404);
-        }
-        catch (QueryException $queryException)
-        {
+        } catch (QueryException $queryException) {
             return response('User already is a member of this event', 409);
         }
 
     }
 
-    public function findEvent($location, $starttime, $category)
+    public function findEvent(Request $request)
     {
-        try {
-           // $eventData = $request->only('location','start_time','category');
-
-            $locationEvents=DB::table('events')->where('location',$location)->where('start_time',$starttime)->where('category',$category)->get();
-
+        $searchType = $request->input('type');
+        $locationEvents = $this->getEventsByCriteria($request, $searchType);
+        if (count($locationEvents) != 0) {
             return response(json_encode($locationEvents), 200);
-        } catch (ModelNotFoundException $exception) {
-            return response("User_Not_Found", 404);
+        } else {
+            return response("No events found. Please try again!", 404);
+        }
+    }
+
+    private function getEventsByCriteria(Request $request, $searchType)
+    {
+        $location = $request->input('location');
+        $startTime = $request->input('start_time');
+        $endTime = $request->input('end_time');
+        $category = $request->input('category');
+        switch ($searchType) {
+            case 'time':
+                return DB::table(config('constants.events_table'))->whereBetween('start_time', [$startTime, $endTime])->get();
+                break;
+            case 'location':
+                return DB::table(config('constants.events_table'))->where('location', $location)->get();
+                break;
+            case 'category':
+                return DB::table(config('constants.events_table'))->where('category', $category)->get();
+            default:
+                return DB::table(config('constants.events_table'))->where('location', $location)->whereBetween('start_time', [$startTime, $endTime])->where('category', $category)->get();
+                break;
         }
     }
 
@@ -76,15 +92,11 @@ class UserController extends Controller
             $rating = $request->all();
             Rating::create(rating);
 
-            return response('User '. $rating->rater_id . ' rated ' . $rating->ratee_id . ' with '. $rating->star . ' stars.', 200);
+            return response('User ' . $rating->rater_id . ' rated ' . $rating->ratee_id . ' with ' . $rating->star . ' stars.', 200);
             //return response('Success!', 200);
-        }
-        catch (ModelNotFoundException $exception)
-        {
+        } catch (ModelNotFoundException $exception) {
             return response($exception->getModel() . ' not found', 404);
-        }
-        catch (QueryException $queryException)
-        {
+        } catch (QueryException $queryException) {
             return response('Query error', 409);
         }
     }

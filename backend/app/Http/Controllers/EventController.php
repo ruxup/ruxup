@@ -113,12 +113,19 @@ class EventController extends Controller
         return response("Event updated successfully", 200);
     }
 
-    public function getAllEvents($column, $orderType)
+    public function getAllEvents($columnNr, $orderType)
     {
         try {
             if ($orderType != 'DESC' && $orderType != 'ASC') {
                 return response('wrong orderType parameter', 406);
             }
+
+            $allColumns = Event::getTableColumns();
+            if($columnNr > count($allColumns) - 1)
+            {
+                return response('The column index is not valid', 400);
+            }
+            $column = $allColumns[$columnNr];
 
             if (Schema::hasColumn('events', $column)) {
                 $events = Event::orderBy($column, $orderType)->get();

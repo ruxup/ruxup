@@ -13,7 +13,7 @@ class InterestsUserSeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('interestuser')->truncate();
+        DB::table(config('constants.interestuser_table'))->truncate();
 
         $interestsUser = [
             ['user_id' => 4, 'interest_id' => 1],
@@ -27,6 +27,6 @@ class InterestsUserSeeder extends Seeder
             ['user_id' => 44, 'interest_id' => 7],
         ];
 
-        DB::table('interestuser')->insert($interestsUser);
+        DB::table(config('constants.interestuser_table'))->insert($interestsUser);
     }
 }

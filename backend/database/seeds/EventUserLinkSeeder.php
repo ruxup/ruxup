@@ -12,14 +12,14 @@ class EventUserLinkSeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('eventuser')->truncate();
+        DB::table(config('constants.eventuser_table'))->truncate();
 
         $eventsUser = [
             ['user_id' => 44, 'event_id' => 24, 'joined_at' => new DateTime(), 'active' => 1],
             ['user_id' => 4, 'event_id' => 24, 'joined_at' => new DateTime(), 'active' => 1],
-            ['user_id' => 44, 'event_id' => 25, 'joined_at' => new DateTime(), 'active' => 1],
+            ['user_id' => 14, 'event_id' => 25, 'joined_at' => new DateTime(), 'active' => 1],
         ];
 
-        DB::table('eventuser')->insert($eventsUser);
+        DB::table(config('constants.eventuser_table'))->insert($eventsUser);
     }
 }

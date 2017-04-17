@@ -61,7 +61,7 @@ class EventTest extends TestCase
 
     public function test_get_all_events()
     {
-        $this->json('GET', "api/getAllEvents/id/ASC")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/getAllEvents/0/ASC")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_leave_event()
