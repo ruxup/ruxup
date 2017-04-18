@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\EventUser;
 use App\Rating;
 use App\User;
 use Illuminate\Http\Request;
@@ -62,6 +63,35 @@ class UserController extends Controller
             return response(json_encode($locationEvents), 200);
         } else {
             return response("No events found. Please try again!", 404);
+        }
+    }
+
+    public function removeProfile($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            EventUser::where('user_id', $id)->delete();
+            return response("User: " . $user->name . " has been removed", 200);
+        } catch (ModelNotFoundException $exception) {
+            return response("User is not active", 404);
+        }
+    }
+
+    public function restoreProfile($id)
+    {
+        try {
+            User::withTrashed()
+                ->where('id', $id)
+                ->restore();
+            EventUser::where('user_id', $id)->restore();
+            $user = User::findOrFail($id);
+            return response("User: " . $user->name . " has been restored", 200);
+        } catch (\ErrorException $exception) {
+            return response("User is active.", 404);
+        }
+        catch (ModelNotFoundException $exception) {
+            return response("User not found", 404);
         }
     }
 

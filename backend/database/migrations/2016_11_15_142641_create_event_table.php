@@ -23,6 +23,7 @@ class CreateEventTable extends Migration
             $table->string('image')->nullable();
             $table->string('category');
             $table->integer('owner_id')->unsigned()->index();
+            $table->softDeletes();
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }

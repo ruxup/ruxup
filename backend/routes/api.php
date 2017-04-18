@@ -26,7 +26,9 @@ Route::get('getEvents/{id}', 'UserController@getEvents');
 Route::get('getEventsOwner/{id}', 'UserController@getEventsWhereOwner');
 Route::get('joinEvent/{userid}/{eventid}', 'UserController@joinEvent');
 Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile');
-//add remove profile
+Route::delete('removeProfile/{id}', 'UserController@removeProfile'); //messages, interestuser, rating
+Route::get('restoreProfile/{id}', 'UserController@restoreProfile');
+Route::post('rate', 'UserController@rate'); //under development
 //handle registration/password reset/update;
 
 //Event
@@ -36,8 +38,8 @@ Route::post('updateEvent', 'EventController@updateEvent');
 Route::get('getAllEvents/{columnNr}/{orderType}', 'EventController@getAllEvents');
 Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
 Route::post('findEvent','UserController@findEvent');
-Route::post('rate', 'UserController@rate'); //under development
-//add remove event
+Route::delete('removeEvent/{id}', 'EventController@removeEvent'); //messages
+Route::get('restoreEvent/{id}', 'EventController@restoreEvent');
 
 //Message
 Route::post('comment', 'MessageController@comment');

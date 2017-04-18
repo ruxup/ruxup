@@ -20,7 +20,8 @@ class CreateEventUserTable extends Migration
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
             $table->primary(array('user_id', 'event_id'));
             $table->timestamp('joined_at')->nullable();
-            $table->boolean('active');
+            $table->softDeletes();
+            $table->boolean('active')->default(true);
         });
 
     }

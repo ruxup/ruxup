@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\EventUser;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Event;
@@ -58,9 +59,7 @@ class EventController extends Controller
             $elementToRemove = $this->checkIfUserIsMemberOfEvent($userId, $eventId);
             if (!is_null($elementToRemove)) {
                 $this->removeUserFromEvent($userId, $eventId);
-            }
-            else
-            {
+            } else {
                 return response('User with id ' . $userId . ' is not member of event with id ' . $eventId, 404);
             }
 
@@ -121,8 +120,7 @@ class EventController extends Controller
             }
 
             $allColumns = Event::getTableColumns();
-            if($columnNr > count($allColumns) - 1)
-            {
+            if ($columnNr > count($allColumns) - 1) {
                 return response('The column index is not valid', 400);
             }
             $column = $allColumns[$columnNr];
@@ -138,6 +136,34 @@ class EventController extends Controller
             }
         } catch (QueryException $e) {
             return response($e->getMessage(), 400);
+        }
+    }
+
+    public function removeEvent($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            $event->delete();
+            EventUser::withTrashed()->where('event_id', $id)->update(['active' => false]);
+            return response("Event: " . $event->name . " has been removed", 200);
+        } catch (ModelNotFoundException $exception) {
+            return response("Event is not active", 404);
+        }
+    }
+
+    public function restoreEvent($id)
+    {
+        try {
+            Event::withTrashed()
+                ->where('id', $id)
+                ->restore();
+            EventUser::withTrashed()->where('event_id', $id)->update(['active' => true]);
+            $event = Event::findOrFail($id);
+            return response("Event: " . $event->name . " has been restored", 200);
+        } catch (\ErrorException $exception) {
+            return response("Event is active.", 404);
+        } catch (ModelNotFoundException $exception) {
+            return response("Event not found", 404);
         }
     }
 
@@ -160,8 +186,7 @@ class EventController extends Controller
 
     private function updateColumn(Event $event, $column, $value)
     {
-        if(!is_null($column))
-        {
+        if (!is_null($column)) {
             $event->$column = $value;
         }
     }
