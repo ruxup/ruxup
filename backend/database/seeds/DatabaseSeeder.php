@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call('InterestsUserSeeder');
         $this->call('EventSeeder');
         $this->call('EventUserLinkSeeder');
+        $this->call('MessageSeeder');
     }
 }

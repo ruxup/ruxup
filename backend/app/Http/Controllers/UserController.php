@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use App\EventUser;
+use App\InterestUser;
+use App\Message;
 use App\Rating;
 use App\User;
 use Illuminate\Http\Request;
@@ -72,6 +74,8 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
             EventUser::where('user_id', $id)->delete();
+            InterestUser::where('user_id', $id)->delete();
+            Message::withTrashed()->where('owner_id', $id)->forceDelete();
             return response("User: " . $user->name . " has been removed", 200);
         } catch (ModelNotFoundException $exception) {
             return response("User is not active", 404);
@@ -85,6 +89,7 @@ class UserController extends Controller
                 ->where('id', $id)
                 ->restore();
             EventUser::where('user_id', $id)->restore();
+            InterestUser::where('user_id', $id)->restore();
             $user = User::findOrFail($id);
             return response("User: " . $user->name . " has been restored", 200);
         } catch (\ErrorException $exception) {

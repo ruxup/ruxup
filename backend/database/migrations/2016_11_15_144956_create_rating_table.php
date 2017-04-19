@@ -20,6 +20,7 @@ class CreateRatingTable extends Migration
             $table->integer('ratee_id')->unsigned()->index();
             $table->foreign('ratee_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->tinyInteger('star')->unsinged();
+            $table->softDeletes();
         });
     }
 

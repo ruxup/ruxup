@@ -21,6 +21,8 @@ class CreateMessagesTable extends Migration
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('event_id')->unsigned()->index();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
+            $table->softDeletes();
+            $table->boolean('active')->default(true);
         });
     }
 

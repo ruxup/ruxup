@@ -5,13 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rating extends Model
+class InterestUser extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'rater_id', 'ratee_id', 'star'
+        'user_id', 'interest_id',
     ];
-
-    protected $table = 'rating';
+    protected $table = 'interestuser';
     protected $dates = ['deleted_at'];
+    public $timestamps = false;
 }

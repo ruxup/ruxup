@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\EventUser;
+use App\Message;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Event;
@@ -145,6 +146,7 @@ class EventController extends Controller
             $event = Event::findOrFail($id);
             $event->delete();
             EventUser::withTrashed()->where('event_id', $id)->update(['active' => false]);
+            Message::withTrashed()->where('event_id', $id)->update(['active' => false]);
             return response("Event: " . $event->name . " has been removed", 200);
         } catch (ModelNotFoundException $exception) {
             return response("Event is not active", 404);
@@ -158,6 +160,7 @@ class EventController extends Controller
                 ->where('id', $id)
                 ->restore();
             EventUser::withTrashed()->where('event_id', $id)->update(['active' => true]);
+            Message::withTrashed()->where('event_id', $id)->update(['active' => true]);
             $event = Event::findOrFail($id);
             return response("Event: " . $event->name . " has been restored", 200);
         } catch (\ErrorException $exception) {
