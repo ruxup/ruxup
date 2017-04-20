@@ -58,10 +58,22 @@ class EventController extends Controller
     {
         try {
             $elementToRemove = $this->checkIfUserIsMemberOfEvent($userId, $eventId);
+            $flag = $this->checkIfUserIsOwnerOfEvent($userId, $eventId);
             if (!is_null($elementToRemove)) {
                 $this->removeUserFromEvent($userId, $eventId);
             } else {
                 return response('User with id ' . $userId . ' is not member of event with id ' . $eventId, 404);
+            }
+
+            if ($flag) {
+                $event = Event::find($eventId);
+                $usersInEvent = json_decode($this->getUsers($eventId)->getContent(), true);
+                if (count($usersInEvent) == 0) {
+                    $event->owner_id = null;
+                } else {
+                    $event->owner_id = $usersInEvent[0]['id'];
+                }
+                $event->save();
             }
 
             return response('User with id ' . $userId . ' left event with id ' . $eventId, 200);
@@ -170,9 +182,40 @@ class EventController extends Controller
         }
     }
 
+    public function kick($eventId, $userId)
+    {
+        try {
+            $eventUser = EventUser::where('event_id', $eventId)->where('user_id', $userId)->first();
+            if (is_null($eventUser)) {
+                throw (new ModelNotFoundException())->setModel('EventUser');
+            }
+            $user = User::find($userId);
+            $event = Event::find($eventId);
+            EventUser::where('event_id', $eventId)->where('user_id', $userId)->forceDelete();
+            return response('User ' . $user->name . ' has been removed from event ' . $event->name, 200);
+        } catch (ModelNotFoundException $exception) {
+            return response($exception->getModel() . ' not found.', 404);
+        }
+    }
+
     private function updatePivotUserEvent(Event $event, User $owner)
     {
         $event->users()->attach($owner, array('joined_at' => new DateTime(), 'active' => 1));
+    }
+
+    private function checkIfUserIsOwnerOfEvent($userId, $eventId)
+    {
+        try {
+            $user = User::findOrFail($userId);
+            $event = Event::findOrFail($eventId);
+            if ($event->owner_id == $user->id) {
+                return true;
+            }
+            return false;
+        } catch (ModelNotFoundException $exception) {
+            return false;
+        }
+
     }
 
     private function checkIfUserIsMemberOfEvent($userId, $eventId)

@@ -48,6 +48,10 @@ class UserController extends Controller
             $event = Event::findOrFail($eventId);
 
             $event->users()->attach($user, array('joined_at' => new DateTime(), 'active' => 1));
+            if (is_null($event->owner_id)) {
+                $event->owner_id = $user->id;
+                $event->save();
+            }
             return response('User ' . $user->name . ' has joined event ' . $event->name, 200);
         } catch (ModelNotFoundException $exception) {
             return response($exception->getModel() . ' not found', 404);
@@ -94,10 +98,47 @@ class UserController extends Controller
             return response("User: " . $user->name . " has been restored", 200);
         } catch (\ErrorException $exception) {
             return response("User is active.", 404);
-        }
-        catch (ModelNotFoundException $exception) {
+        } catch (ModelNotFoundException $exception) {
             return response("User not found", 404);
         }
+    }
+
+    public function changeOwner(Request $request)
+    {
+        try {
+            $currentOwner = User::findOrFail($request->input('owner_id'));
+            $user = User::findOrFail($request->input('user_id'));
+            if ($currentOwner->id == $user->id) {
+                return response('Current user is already the owner of this event.', 400);
+            }
+            $event = Event::findOrFail($request->input('event_id'));
+            if ($currentOwner->id != $event->owner_id) {
+                return response('Access denied.', 403);
+            }
+            $flag = $this->checkIfUserIsMember($user, $event);
+            if(!$flag)
+            {
+                return response('User to be owner is not member of this event.', 400);
+            }
+            $event->owner_id = $user->id;
+            $event->save();
+            return response('Event: ' . $event->name . " new owner's is: " . $user->name, 200);
+        } catch (ModelNotFoundException $exception) {
+            return response($exception->getModel() . ' not found.', 404);
+        }
+
+    }
+
+    private function checkIfUserIsMember($user, $event)
+    {
+        $flag = false;
+        $usersInEvent = EventUser::all()->where('event_id', $event->id);
+        foreach ($usersInEvent as $item) {
+            if ($item['user_id'] == $user->id) {
+                $flag = true;
+            }
+        }
+        return $flag;
     }
 
     private function getEventsByCriteria(Request $request, $searchType)

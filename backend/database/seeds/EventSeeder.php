@@ -16,7 +16,7 @@ class EventSeeder extends Seeder
 
         $events = [
             ['id' => 24, 'name' => 'PSV - Ajax', 'location' => 'Eindhoven', 'start_time' => new DateTime(), 'end_time' => date("Y-m-d", strtotime("+1 week")), 'category' => 'Sport', 'owner_id' => 44],
-            ['id' => 25, 'name' => 'Ajax - PSV', 'location' => 'Amsterdam', 'start_time' => new DateTime(), 'end_time' => date("Y-m-d", strtotime("+1 week")), 'category' => 'Sport', 'owner_id' => 44],
+            ['id' => 25, 'name' => 'Ajax - PSV', 'location' => 'Amsterdam', 'start_time' => new DateTime(), 'end_time' => date("Y-m-d", strtotime("+1 week")), 'category' => 'Sport', 'owner_id' => 14],
         ];
 
         DB::table(config('constants.events_table'))->insert($events);
