@@ -1,0 +1,11 @@
+{
+    "require": {
+        "ext-mbstring": "*",
+        "phpunit/phpunit": "^5.7"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "cd backend && composer update"
+        ]
+    }
+}

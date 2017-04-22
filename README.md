@@ -1,1 +1,6 @@
-# RUXUP 
+# ruxup
+
+* cd backend
+* composer update
+
+
