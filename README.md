@@ -1,6 +1,6 @@
 # ruxup
 
-cd backend
-composer update
+* cd backend
+* composer update
 
 
