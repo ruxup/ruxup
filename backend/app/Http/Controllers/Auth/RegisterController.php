@@ -74,7 +74,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function postRegister(Request $request)
+    public function Register(Request $request)
     {
         try {
             $validate = $this->validator($request->all(), array(
@@ -92,6 +92,6 @@ class RegisterController extends Controller
         $user = $this->create($request->all());
         $user->save();
 
-        return response('registation_successful', 201);
+        return response('registration_successful', 201);
     }
 }

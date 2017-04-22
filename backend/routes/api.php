@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
 //User
 Route::post('login', 'Auth\LoginController@login');
 Route::get('profile', 'Auth\LoginController@getAuthenticatedUser');
-Route::post('register', 'Auth\RegisterController@postRegister'); //not tested
+Route::post('register', 'Auth\RegisterController@Register');
 Route::get('logout', 'Auth\LoginController@logout');
 Route::get('getEvents/{id}', 'UserController@getEvents');
 Route::get('getEventsOwner/{id}', 'UserController@getEventsWhereOwner');
@@ -23,6 +23,8 @@ Route::get('restoreProfile/{id}', 'UserController@restoreProfile');
 Route::post('changeOwner', 'UserController@changeOwner'); //available only to owner
 Route::post('rate', 'UserController@rate'); //under development
 //handle registration/password reset/update;
+//handle images ->load images
+//handle CI
 
 
 //handle invite another user to join event. - for Version 2.0
@@ -43,8 +45,8 @@ Route::delete('kickMember/{event_id}/{user_id}', 'EventController@kick'); //avai
 
 //Message
 Route::post('comment', 'MessageController@comment');
-Route::delete('deleteMessage/{id}/{owner_id}', 'MessageController@delete');
-Route::post('editMessage/{id}/{owner_id}', 'MessageController@edit');
+Route::delete('deleteComment/{id}/{owner_id}', 'MessageController@delete');
+Route::post('editComment/{id}/{owner_id}', 'MessageController@edit');
 
 //Interests
 Route::post('addInterest', 'InterestsController@add');
