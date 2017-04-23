@@ -2,7 +2,7 @@
 /public/storage
 /vendor
 /.idea
-/.env
+/backend/.env
 Homestead.json
 Homestead.yaml
 composer.json
