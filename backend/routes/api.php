@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 
-//Create local DB.
-//Setup ruxup email.
+//Setup ruxup email. (?)
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,16 +19,16 @@ Route::get('joinEvent/{userid}/{eventid}', 'UserController@joinEvent');
 Route::put('profile/{id}', 'Auth\EditController@putUpdateProfile'); //not tested
 Route::delete('removeProfile/{id}', 'UserController@removeProfile');
 Route::get('restoreProfile/{id}', 'UserController@restoreProfile');
-Route::post('changeOwner', 'UserController@changeOwner'); //available only to owner
+Route::post('changeOwner', 'UserController@changeOwner'); //owner
 Route::post('rate', 'UserController@rate'); //under development
-//handle registration/password reset/update;
+Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+//handle update;
+//handle rate;
 //handle images ->load images
-//handle CI
-
-
-//handle invite another user to join event. - for Version 2.0
-//handle pending/accept when user wants to join an event. - for Version 2.0
-
+//shorter address for api calls.
+//chat one-on-one
+//handle banned users.
 
 //Event
 Route::post('create_event', 'EventController@create');
@@ -40,8 +39,8 @@ Route::delete('leaveEvent/{userid}/{eventid}', 'EventController@leaveEvent');
 Route::post('findEvent','UserController@findEvent');
 Route::delete('removeEvent/{id}', 'EventController@removeEvent');
 Route::get('restoreEvent/{id}', 'EventController@restoreEvent');
-Route::delete('kickMember/{event_id}/{user_id}', 'EventController@kick'); //available only to owner.
-//handle banned users.
+Route::delete('kickMember/{event_id}/{user_id}', 'EventController@kick'); //owner.
+
 
 //Message
 Route::post('comment', 'MessageController@comment');
@@ -52,6 +51,6 @@ Route::post('editComment/{id}/{owner_id}', 'MessageController@edit');
 Route::post('addInterest', 'InterestsController@add');
 Route::delete('deleteInterest/{user_id}/{interest_id}', 'InterestsController@delete');
 
-//shorter address for api calls.
 
-
+//handle invite another user to join event. - for Version 2.0
+//handle pending/accept when user wants to join an event. - for Version 2.0
