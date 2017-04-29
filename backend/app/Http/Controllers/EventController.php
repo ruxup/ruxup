@@ -35,6 +35,11 @@ class EventController extends Controller
         ], $messages);
     }
 
+    public function getEvent($id)
+    {
+        return $id;
+    }
+
     public function create(Request $request)
     {
         $eventData = $request->only('name', 'location', 'start_time', 'end_time', 'category', 'description', 'image', 'owner_id');
@@ -236,5 +241,6 @@ class EventController extends Controller
             $event->$column = $value;
         }
     }
+
 
 }
