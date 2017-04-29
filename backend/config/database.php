@@ -66,6 +66,20 @@ return [
             'engine' => null,
         ],
 
+        'mysql-production' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'eu-cdbr-west-01.cleardb.com'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'heroku_720f7f96aceaf6d'),
+            'username' => env('DB_USERNAME', 'b4e50aff3a7941'),
+            'password' => env('DB_PASSWORD', '557aa619'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),
