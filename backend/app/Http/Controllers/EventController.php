@@ -40,6 +40,7 @@ class EventController extends Controller
         return $id;
     }
 
+
     public function create(Request $request)
     {
         $eventData = $request->only('name', 'location', 'start_time', 'end_time', 'category', 'description', 'image', 'owner_id');

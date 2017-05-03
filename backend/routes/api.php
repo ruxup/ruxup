@@ -13,7 +13,7 @@ Route::group(['prefix' => 'user'], function (){
     Route::post('rate', array('as' => 'user.rate', 'uses' => 'UserController@rate')); //under development
     Route::post('/', array('as' => 'user.login', 'uses' => 'Auth\LoginController@login'));
     Route::get('/', array('as' => 'user.profile', 'uses' => 'Auth\LoginController@getAuthenticatedUser'));
-    Route::put('{id}', array('as' => 'user.update', 'uses' => 'Auth\EditController@putUpdateProfile')); //not tested
+    Route::post('{id}', array('as' => 'user.update', 'uses' => 'Auth\EditController@UpdateProfile'));
     Route::delete('{id}', array('as' => 'user.remove', 'uses' => 'UserController@removeProfile'));
     Route::get('{id}', array('as' => 'user.restore', 'uses' => 'UserController@restoreProfile'));
     Route::get('{userid}/{eventid}', array('as' => 'user.join', 'uses' => 'UserController@joinEvent'));
@@ -21,7 +21,7 @@ Route::group(['prefix' => 'user'], function (){
 
 Route::group(['prefix' => 'admin'], function (){
     Route::post('change', array('as' => 'admin.change', 'uses' => 'UserController@changeOwner'));
-    Route::get('{id}', array('as' => 'admin.events', 'uses' => 'UserController@getEventsWhereOwner'));
+    Route::get('{id}', array('as' => 'admin.events', 'uses' => 'UserController@getEven tsWhereOwner'));
 });
 
 Route::group(['prefix' => 'password'], function() {
@@ -56,12 +56,13 @@ Route::group(['prefix' => 'interests'], function () {
     Route::delete('{user_id}/{interest_id}',  array('as' => 'interests.remove', 'uses' => 'InterestsController@delete'));
 });
 
-//handle update;
+//handle update - see image;
 //handle rate;
 //handle images ->load images
 //shorter address for api calls.
 //chat one-on-one
-//handle banned users.
+//swagger
+//handle report user
 //Setup ruxup email.
 
 //handle invite another user to join event. - for Version 2.0

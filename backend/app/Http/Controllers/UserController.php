@@ -16,13 +16,32 @@ use DateTime;
 
 class UserController extends Controller
 {
+     /**
+     * @SWG\Get(
+     *   path="/api/user/events/{id}",
+     *   summary="List events where the user is a member of.",
+     *   operationId="getEvents",
+      *  tags={"events"},
+      *  produces={"application/json"},
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="User id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="Get events"),
+     *   @SWG\Response(response=404, description="User_Not_Found")
+     * )
+     *
+     */
     public function getEvents($id)
     {
         try {
             $user = User::findOrFail($id);
-            return response(json_encode($user->events), 200);
+            return response(json_encode(array("data" => $user->events)), 200);
         } catch (ModelNotFoundException $exception) {
-            return response("User_Not_Found", 404);
+            return response(json_encode(array("error message" => "User_Not_Found")), 404);
         }
     }
 
