@@ -21,7 +21,7 @@ Route::group(['prefix' => 'user'], function (){
 
 Route::group(['prefix' => 'admin'], function (){
     Route::post('change', array('as' => 'admin.change', 'uses' => 'UserController@changeOwner'));
-    Route::get('{id}', array('as' => 'admin.events', 'uses' => 'UserController@getEven tsWhereOwner'));
+    Route::get('{id}', array('as' => 'admin.events', 'uses' => 'UserController@getEventsWhereOwner'));
 });
 
 Route::group(['prefix' => 'password'], function() {
