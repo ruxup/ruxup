@@ -10,7 +10,8 @@ Route::group(['prefix' => 'user'], function (){
     Route::post('register', array('as' => 'user.register', 'uses' => 'Auth\RegisterController@Register'));
     Route::get('logout', array('as' => 'user.logout', 'uses' => 'Auth\LoginController@logout'));
     Route::get('events/{id}', array('as' => 'user.events', 'uses' => 'UserController@getEvents'));
-    Route::post('rate', array('as' => 'user.rate', 'uses' => 'UserController@rate')); //under development
+    Route::post('rate', array('as' => 'user.rate', 'uses' => 'UserController@rate'));
+    Route::post('chat', array('as' => 'user.chat', 'uses' => 'UserController@chat'));
     Route::post('/', array('as' => 'user.login', 'uses' => 'Auth\LoginController@login'));
     Route::get('/', array('as' => 'user.profile', 'uses' => 'Auth\LoginController@getAuthenticatedUser'));
     Route::post('{id}', array('as' => 'user.update', 'uses' => 'Auth\EditController@UpdateProfile'));
@@ -56,11 +57,10 @@ Route::group(['prefix' => 'interests'], function () {
     Route::delete('{user_id}/{interest_id}',  array('as' => 'interests.remove', 'uses' => 'InterestsController@delete'));
 });
 
-//handle update - see image;
-//handle rate;
-//handle images ->load images
+//handle update - see image; //handle images ->load images
+//Change all responses to json;
+
 //shorter address for api calls.
-//chat one-on-one
 //swagger
 //handle report user
 //Setup ruxup email.

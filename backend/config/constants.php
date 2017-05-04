@@ -26,6 +26,7 @@ return [
     'messages_table' => env('MESSAGES_TABLE','messages'),
     'rating_table' => env('RATING_TABLE', 'rating'),
     'users_table' => env('USERS_TABLE', 'users'),
+    'chat_table' => env('CHATS_TABLE', 'chats'),
 ]
 
 ?>

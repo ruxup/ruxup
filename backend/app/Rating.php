@@ -14,4 +14,5 @@ class Rating extends Model
 
     protected $table = 'rating';
     protected $dates = ['deleted_at'];
+    public $timestamps = false;
 }
