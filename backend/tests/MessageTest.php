@@ -23,22 +23,19 @@ class MessageTest extends TestCase
      * @return void
      */
     public function test_comment(){
-
         $request = [
             'description' =>  'hi i am test message',
             'time_sent' => Carbon::parse('2017-11-26 15:50:32')->format('Y-m-d H:i:s'),
             'owner_id' => 44,
             'event_id' => 24
         ];
-
         $this->json('POST', 'api/comment', $request)->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_delete(){
-
-        //TODO
-
-        $this->assertTrue(true);
+        $response = $this->call('DELETE', "api/deleteComment/44/24");
+        print "$response";
+        $this->assertEquals('200 User with id 44 deleted comment with id 24', $response->status() . ' ' . $response->getContent());
     }
 
     public function test_edit(){
