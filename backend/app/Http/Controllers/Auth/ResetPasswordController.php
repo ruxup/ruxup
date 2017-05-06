@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Psy\Util\Json;
 
 class ResetPasswordController extends Controller
 {
@@ -29,4 +32,30 @@ class ResetPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        $validator = $this->getValidationFactory()->make($request->all(), $rules, $messages, $customAttributes);
+        return $validator;
+    }
+
+    public function reset(Request $request)
+    {
+        $validator = $this->validate($request, $this->rules(), $this->validationErrorMessages());
+        if ($validator->fails()) {
+            return response($validator->failed(), 417);
+        }
+
+        $response = $this->broker()->reset(
+            $this->credentials($request), function ($user, $password) {
+            $this->resetPassword($user, $password);
+        }
+        );
+        if ($response == Password::PASSWORD_RESET) {
+            return $this->sendResetResponse($response);
+        } else {
+            return $this->sendResetFailedResponse($request, $response);
+        }
+    }
+
 }

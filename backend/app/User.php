@@ -12,13 +12,13 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'password',
+       'name', 'email', 'password', 'created_at', 'updated_at'
     ];
     protected $hidden = [
         'password', 'remember_token',
     ];
     protected $dates = ['deleted_at'];
-    public $timestamps = false;
+    public $timestamps = true;
     protected $table = 'users';
 
     public function events()

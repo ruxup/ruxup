@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Chat;
 use App\Event;
 use App\EventUser;
 use App\InterestUser;
@@ -13,16 +14,36 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Validator;
 
 class UserController extends Controller
 {
+    /**
+     * @SWG\Get(
+     *   path="/api/user/events/{id}",
+     *   summary="List events where the user is a member of.",
+     *   operationId="getEvents",
+     *  tags={"events"},
+     *  produces={"application/json"},
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="User id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="Get events"),
+     *   @SWG\Response(response=404, description="User_Not_Found")
+     * )
+     *
+     */
     public function getEvents($id)
     {
         try {
             $user = User::findOrFail($id);
-            return response(json_encode($user->events), 200);
+            return response(json_encode(array("data" => $user->events)), 200);
         } catch (ModelNotFoundException $exception) {
-            return response("User_Not_Found", 404);
+            return response(json_encode(array("error message" => "User_Not_Found")), 404);
         }
     }
 
@@ -116,8 +137,7 @@ class UserController extends Controller
                 return response('Access denied.', 403);
             }
             $flag = $this->checkIfUserIsMember($user, $event);
-            if(!$flag)
-            {
+            if (!$flag) {
                 return response('User to be owner is not member of this event.', 400);
             }
             $event->owner_id = $user->id;
@@ -166,14 +186,43 @@ class UserController extends Controller
     {
         try {
             $rating = $request->all();
-            Rating::create(rating);
-
-            return response('User ' . $rating->rater_id . ' rated ' . $rating->ratee_id . ' with ' . $rating->star . ' stars.', 200);
-            //return response('Success!', 200);
+            $rater = User::findOrFail($rating['rater_id']);
+            $rated = User::findOrFail($rating['ratee_id']);
+            if ($rating['star'] < 1 || $rating['star'] > 5) {
+                throw new ModelNotFoundException('Star');
+            }
+            Rating::create($rating);
+            return response()->json(array(['message' => 'User ' . $rater->name . ' rated ' . $rated->name . ' with ' . $rating['star'] . ' stars.']), 200);
         } catch (ModelNotFoundException $exception) {
-            return response($exception->getModel() . ' not found', 404);
+            return response()->json(array(['error' => $exception->getModel() . ' not found']), 404);
         } catch (QueryException $queryException) {
-            return response('Query error', 409);
+            return response()->json(array(['error' => $queryException->getMessage()]), 409);
+        }
+    }
+
+    private function validateChat($chatData)
+    {
+        return Validator::make($chatData, [
+            'sender_id' => 'required|',
+            'receiver_id' => 'required|',
+            'message' => 'required|min:1|max:255'
+        ]);
+    }
+
+    public function chat(Request $request)
+    {
+        try {
+            $chatData = $request->all();
+            $validate = $this->validateChat($chatData);
+            if ($validate->fails()) {
+                return response()->json(array('error' => $validate->errors()), 400);
+            }
+            $sender = User::findOrFail($chatData['sender_id']);
+            $receiver = User::findOrFail($chatData['receiver_id']);
+            Chat::create($chatData);
+            return response()->json(array('message' => 'Message has been successfully sent from ' . $sender->name . ' to ' . $receiver->name), 200);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(array('error' => $exception->getModel() . ' not found'), 403);
         }
     }
 }

@@ -11,54 +11,73 @@ use Illuminate\Foundation\Auth\User;
 
 class EditController extends Controller
 {
-    // Upload to profile.
-    public function putUpdateProfile(Request $request, $id)
+    protected function validator(array $data)
     {
-        $userData = $request->only('name', 'email', 'password', 'nationality', 'bio', 'city', 'profile_pic', 'phone');
-
-        $user = User::find($id);
-
-        $image = $request->file('image');
-        $upload = 'img/posts/';
-        $filename = time().$image->getClientOriginalName();
-        $path = move_uploaded_file($image->getPathname(), $upload. $filename);
-
-        $user->name = (string)$userData['name'];
-        $user->email = (string)$userData['email'];
-        $user->password = (string)$userData['password'];
-        $user->nationality = (string)$userData['nationality'];
-        $user->bio = $userData['bio'];
-        $user->city = (string)$userData['city'];
-        $user->profile_pic = $filename;
-        $user->phone = (string)$userData['phone'];
-
-        $user->save();
-
-        return response('Profile was successfully edited', 200);
+        return Validator::make($data, [
+            'name' => 'max:255',
+            'email' => 'email|max:255|unique:users',
+            'password' => 'min:6|confirmed',
+            'nationality' => 'max:30',
+            'bio' => 'max:255',
+            'location' => 'max:50',
+            'phone' => 'regex:/(\+)[0-9]{9,}/'
+        ]);
     }
 
+    private function checkIfNull(&$userData, $item)
+    {
+        if (is_null($userData[$item])) {
+            unset($userData[$item]);
+        }
+    }
 
+    public function UpdateProfile(Request $request, $id)
+    {
+        $userData = $request->only('name', 'email', 'password', 'nationality', 'bio', 'location', 'profile_pic', 'phone');
+        $this->checkIfNull($userData, 'password');
+        $this->checkIfNull($userData, 'email');
 
+        $validate = $this->validator($userData);
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+        $user = User::find($id);
+        if (is_null($user)) {
+            return response()->json(["error" => "User not found"], 404);
+        }
 
+        //still need to think about this
+        if (!is_null($userData['profile_pic'])) {
+            $image = $request->file('image');
+            $upload = 'img/posts/';
+            $filename = time() . $image->getClientOriginalName();
+            move_uploaded_file($image->getPathname(), $upload . $filename);
+            $user->profile_pic = $filename;
+        }
 
-    //Create post
-/*
-$image = $request->file('image');
-$upload = 'img/posts/';
-$filename = time().$image->getClientOriginalName();
-$path = move_uploaded_file($image->getPathname(), $upload. $filename);
+        if (!is_null($userData['name'])) {
+            $user->name = (string)$userData['name'];
+        }
+        if (in_array('email', $userData)) {
+            $user->email = (string)$userData['email'];
+        }
+        if (in_array('password', $userData)) {
+            $user->password = (string)$userData['password'];
+        }
+        if (!is_null($userData['nationality'])) {
+            $user->nationality = (string)$userData['nationality'];
+        }
+        if (!is_null($userData['bio'])) {
+            $user->bio = $userData['bio'];
+        }
+        if (!is_null($userData['location'])) {
+            $user->location = (string)$userData['location'];
+        }
+        if (!is_null($userData['phone'])) {
+            $user->phone = (string)$userData['phone'];
+        }
+        $user->save();
 
-$post = new Post();
-$post->category_id = $request->category_id;
-$post->title = $request->title;
-$post->author = $request->author;
-$post->image = $filename;
-$post->short_desc = $request->short_desc;
-$post->description = $request->description;
-$post->save();
-
-Session::flash('post_create', 'New post is Created');
-
-return redirect('post/create');
-*/
+        return response()->json(["message" => "Profile was successfully updated"], 200);
+    }
 }

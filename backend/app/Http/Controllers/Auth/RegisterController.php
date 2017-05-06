@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use League\Flysystem\Exception;
 use Validator;
-use Illuminate\Foundation\Validation;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -44,6 +40,7 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -77,11 +74,7 @@ class RegisterController extends Controller
     public function Register(Request $request)
     {
         try {
-            $validate = $this->validator($request->all(), array(
-                'name' => 'required|max:255|unique:users',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|max:255'
-            ));
+            $validate = $this->validator($request->all());
             if ($validate->fails()) {
                 return response($validate->failed(), 417);
             }

@@ -1,6 +1,7 @@
 {
     "require": {
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "phpunit/phpunit": "^5.7"
     },
     "scripts": {
         "post-install-cmd": [
