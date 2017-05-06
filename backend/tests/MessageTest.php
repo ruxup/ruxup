@@ -5,9 +5,17 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
 
+
 class MessageTest extends TestCase
 {
     use DatabaseTransactions;
+    use TestCaseTrait;
+
+
+    public function getDataSet()
+    {
+        return $this->createFlatXmlDataSet('MessageTest_db_prep_data.xml');
+    }
 
     public function setUp()
     {
@@ -30,13 +38,16 @@ class MessageTest extends TestCase
             'owner_id' => 2,
             'event_id' => 25
         ];
-        $this->json('POST', "api/messages", $data)->seeStatusCode(200)->decodeResponseJson();
+        $this->json('POST', "api/messages/comment", $data)->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_delete(){
-        $response = $this->call('DELETE', "api/deleteComment/44/24");
-        print "$response";
-        $this->assertEquals('200 User with id 44 deleted comment with id 24', $response->status() . ' ' . $response->getContent());
+        $response = $this->call('DELETE', "api/messages/delete/1/1");
+//
+//        print "$response";
+        $this->assertEquals(200 , $response->getStatusCode());
+
+//        $this->assertEquals('200 User with id 44 deleted comment with id 24', $response->status() . ' ' . $response->getContent());
     }
 
     public function test_edit(){
