@@ -35,7 +35,7 @@ class EventTest extends TestCase
             'owner_id' => '4'
         ];
         $response = $this->call('POST', "api/event", $data);
-        $this->assertEquals('201 Event created successfully', $response->status() . ' ' . $response->getContent());
+        $this->assertEquals('201', $response->status());
     }
 
     public function test_get_users()

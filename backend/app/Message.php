@@ -9,7 +9,7 @@ class Message extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'description', 'time_sent', 'owner_id', 'event_id'
+       'description', 'time_sent', 'owner_id', 'event_id'
     ];
 
     public $timestamps = false;

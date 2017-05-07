@@ -24,6 +24,7 @@ class MessageController extends Controller
 
     public function comment(Request $request)
     {
+        $request->request->add(['time_sent' => Carbon::now()->format('Y-m-d H:i:s')]);
         $messageData = $request->only('description', 'time_sent', 'owner_id', 'event_id');
 
         $owner = $messageData['owner_id'];
