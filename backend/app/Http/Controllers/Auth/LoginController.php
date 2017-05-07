@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -48,19 +50,22 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            //attempt to verify credentials and create token for user
+            $user = User::where('email', $credentials['email'])->first();
             if(!$token = JWTAuth::attempt($credentials))
             {
-                return response('invalid_credentials', 401);
+                return response()->json(['error' => 'invalid credentials'], 401);
             }
         }
         catch (JWTException $exc)
         {
-            //token wrong
-            return response('could_not_create_token', 500);
+            return response()->json(['error' => 'could not create token'], 500);
         }
-
-        return response()->json(compact('token'));
+        catch (ModelNotFoundException $exception)
+        {
+            return response()->json(['error' => $exception->getModel() . ' not found'], 404);
+        }
+        $arrayToReturn = array(['token' => $token, 'user_id' => $user->id]);
+        return response()->json($arrayToReturn);
     }
 
     // Get the user data

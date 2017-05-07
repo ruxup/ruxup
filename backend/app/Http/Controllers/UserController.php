@@ -62,7 +62,7 @@ class UserController extends Controller
 
     }
 
-    public function joinEvent($userId, $eventId)
+    public function joinEvent($eventId, $userId)
     {
         try {
             $user = User::findOrFail($userId);
@@ -82,14 +82,13 @@ class UserController extends Controller
 
     }
 
-    public function findEvent(Request $request)
+    public function findEvent($type, Request $request)
     {
-        $searchType = $request->input('type');
-        $locationEvents = $this->getEventsByCriteria($request, $searchType);
+        $locationEvents = $this->getEventsByCriteria($request, $type);
         if (count($locationEvents) != 0) {
-            return response(json_encode($locationEvents), 200);
+            return response()->json($locationEvents, 200);
         } else {
-            return response("No events found. Please try again!", 404);
+            return response()->json(['error' => 'No events found for selected criteria.'], 404);
         }
     }
 
@@ -124,7 +123,7 @@ class UserController extends Controller
         }
     }
 
-    public function changeOwner(Request $request)
+    public function changeOwner($id, Request $request)
     {
         try {
             $currentOwner = User::findOrFail($request->input('owner_id'));
@@ -132,7 +131,7 @@ class UserController extends Controller
             if ($currentOwner->id == $user->id) {
                 return response('Current user is already the owner of this event.', 400);
             }
-            $event = Event::findOrFail($request->input('event_id'));
+            $event = Event::findOrFail($id);
             if ($currentOwner->id != $event->owner_id) {
                 return response('Access denied.', 403);
             }
@@ -182,16 +181,25 @@ class UserController extends Controller
         }
     }
 
-    public function rate(Request $request)
+    public function rate($id, Request $request)
     {
         try {
+            $rater = User::findOrFail($id);
+            $request->request->add(['rater_id' => $id]);
             $rating = $request->all();
-            $rater = User::findOrFail($rating['rater_id']);
             $rated = User::findOrFail($rating['ratee_id']);
             if ($rating['star'] < 1 || $rating['star'] > 5) {
                 throw new ModelNotFoundException('Star');
             }
-            Rating::create($rating);
+            $rateObj = Rating::where('rater_id', $rating['rater_id'])->where('ratee_id', $rating['ratee_id'])->first();
+            if(is_null($rateObj)) {
+                Rating::create($rating);
+            }
+            else
+            {
+                $rateObj->star = $rating['star'];
+                $rateObj->save();
+            }
             return response()->json(array(['message' => 'User ' . $rater->name . ' rated ' . $rated->name . ' with ' . $rating['star'] . ' stars.']), 200);
         } catch (ModelNotFoundException $exception) {
             return response()->json(array(['error' => $exception->getModel() . ' not found']), 404);
@@ -203,21 +211,21 @@ class UserController extends Controller
     private function validateChat($chatData)
     {
         return Validator::make($chatData, [
-            'sender_id' => 'required|',
             'receiver_id' => 'required|',
-            'message' => 'required|min:1|max:255'
+            'message' => 'required|min:1|max:255',
         ]);
     }
 
-    public function chat(Request $request)
+    public function chat($id, Request $request)
     {
         try {
+            $sender = User::findOrFail($id);
+            $request->request->add(['sender_id' => $id]);
             $chatData = $request->all();
             $validate = $this->validateChat($chatData);
             if ($validate->fails()) {
                 return response()->json(array('error' => $validate->errors()), 400);
             }
-            $sender = User::findOrFail($chatData['sender_id']);
             $receiver = User::findOrFail($chatData['receiver_id']);
             Chat::create($chatData);
             return response()->json(array('message' => 'Message has been successfully sent from ' . $sender->name . ' to ' . $receiver->name), 200);

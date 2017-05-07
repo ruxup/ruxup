@@ -26,28 +26,18 @@ class UserTest extends TestCase
 
     public function test_get_events()
     {
-        $this->json('GET', "api/user/events/1")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/user/1/events")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_get_events_where_owner()
     {
-        $this->json('GET', "api/admin/2")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/user/2/owner")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_join_event()
     {
-        $response = $this->call('GET', "api/user/5/25");
+        $response = $this->call('GET', "api/event/25/5");
         $this->assertEquals('200 User Radu has joined event Ajax - PSV', $response->status() . ' ' . $response->getContent());
-    }
-
-    public function test_find_event()
-    {
-        $data = [
-            'start_time' =>  Carbon::parse('2016-11-26 14:50:32')->format('Y-m-d H:i:s'),
-            'end_time' => Carbon::parse('2017-11-26 15:50:32')->format('Y-m-d H:i:s'),
-            'type' => 'time',
-        ];
-        $this->json('POST', "api/event/find", $data)->seeStatusCode(200)->decodeResponseJson();
     }
 
 }

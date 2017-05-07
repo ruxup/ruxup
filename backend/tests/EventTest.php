@@ -40,13 +40,12 @@ class EventTest extends TestCase
 
     public function test_get_users()
     {
-        $this->json('GET', "api/members/24")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/event/24/members")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_update_event()
     {
         $data = [
-            'id' => '24',
             'name' => 'testCaseUpdate',
             'location' => 'testCaseUpdate',
             'start_time' => Carbon::parse('2010-12-31 00:00:00')->format('Y-m-d H:i:s'),
@@ -55,18 +54,18 @@ class EventTest extends TestCase
             'description' => 'testCaseUpdate',
             'owner_id' => '4'
         ];
-        $response = $this->call('POST', "api/event/update", $data);
+        $response = $this->call('PUT', "api/event/24/update", $data);
         $this->assertEquals('200 Event updated successfully', $response->status() . ' ' . $response->getContent());
     }
 
     public function test_get_all_events()
     {
-        $this->json('GET', "api/event/0/ASC")->seeStatusCode(200)->decodeResponseJson();
+        $this->json('GET', "api/events/0/ASC")->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_leave_event()
     {
-        $response = $this->call('DELETE', "api/event/2/25");
+        $response = $this->call('DELETE', "api/event/25/2");
         $this->assertEquals('200 User with id 2 left event with id 25', $response->status() . ' ' . $response->getContent());
     }
 

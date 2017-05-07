@@ -41,6 +41,7 @@ class ResetPasswordController extends Controller
 
     public function reset(Request $request)
     {
+
         $validator = $this->validate($request, $this->rules(), $this->validationErrorMessages());
         if ($validator->fails()) {
             return response($validator->failed(), 417);
@@ -49,13 +50,14 @@ class ResetPasswordController extends Controller
         $response = $this->broker()->reset(
             $this->credentials($request), function ($user, $password) {
             $this->resetPassword($user, $password);
-        }
-        );
+        });
+
         if ($response == Password::PASSWORD_RESET) {
-            return $this->sendResetResponse($response);
+            return json_encode(['message' => trans($response), 'email' => $request->input('email')]);
         } else {
-            return $this->sendResetFailedResponse($request, $response);
+            return json_encode(['message' => 'Issue reseting password.', 'email' => $request->input('email') , 'errors' => trans($response)]);
         }
+
     }
 
 }

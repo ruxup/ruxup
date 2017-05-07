@@ -47,20 +47,20 @@ class EventController extends Controller
 
         $validate = $this->validator($eventData);
         if ($validate->fails()) {
-            return response($validate->errors()->all(), 417);
+            return response()->json($validate->errors()->all(), 417);
         } else {
             $event = Event::create($eventData);
             $ownerId = $event->owner_id;
             $owner = User::find($ownerId);
             if (is_null($owner)) {
-                return response('User with id: ' . $ownerId . ' not found.', 404);
+                return response()->json('User with id ' . $ownerId . ' not found', 404);
             }
             $this->updatePivotUserEvent($event, $owner);
-            return response('Event created successfully', 201);
+            return response()->json(['message' => 'Event successfully created', 'event_id' => $event->id], 201);
         }
     }
 
-    public function leaveEvent($userId, $eventId)
+    public function leaveEvent($eventId, $userId)
     {
         try {
             $elementToRemove = $this->checkIfUserIsMemberOfEvent($userId, $eventId);
@@ -104,12 +104,9 @@ class EventController extends Controller
     }
 
     //Need to handle image as well.
-    public function updateEvent(Request $request)
+    public function updateEvent($id, Request $request)
     {
-        $id = $request->only('id');
-
         $event = Event::whereId($id)->first();
-
         try {
             $name = $request->get('name');
             $location = $request->get('location');

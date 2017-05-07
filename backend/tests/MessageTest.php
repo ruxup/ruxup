@@ -4,12 +4,12 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
+use PHPUnit\ExampleExtension\TestCaseTrait;
 
 
 class MessageTest extends TestCase
 {
     use DatabaseTransactions;
-    use TestCaseTrait;
 
 
     public function getDataSet()
@@ -38,11 +38,11 @@ class MessageTest extends TestCase
             'owner_id' => 2,
             'event_id' => 25
         ];
-        $this->json('POST', "api/messages/comment", $data)->seeStatusCode(200)->decodeResponseJson();
+        $this->json('POST', "api/messages", $data)->seeStatusCode(200)->decodeResponseJson();
     }
 
     public function test_delete(){
-        $response = $this->call('DELETE', "api/messages/delete/1/1");
+        $response = $this->call('DELETE', "api/messages/1/1");
 //
 //        print "$response";
         $this->assertEquals(200 , $response->getStatusCode());
